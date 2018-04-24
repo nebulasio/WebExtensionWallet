@@ -10,7 +10,6 @@
 </head>
 
 <style>
-
 </style>
 
 <body>
@@ -25,7 +24,6 @@
     </div>
 <p id="accountAddress" style="color:#FF0000;font-size:12px;"> </p>
 
-
 <p>1.2 Input the receive account and amount of this transaction </p>
     <div>
         <label for="inputReceiveAddress">receive address: </label>
@@ -38,7 +36,6 @@
     <div>
         <button type="button" id="buttonSendTx" class="btn btn-block" >send transaction</button>
     </div>
-
 
 <h3>2 Call a smart contract</h3>
 <p>Input your smart contract address and parameters </p>
@@ -57,15 +54,8 @@
     <div>
         <button type="button" id="buttonCallDapp" class="btn btn-block">call smart contract</button>
     </div>
-
-
-
-
 </div>
-
-
 <p id="txResult" style="color:#FF0000;font-size:12px;"></p>
-
 
 <script>
 
@@ -100,12 +90,11 @@
         }, "*");
     })
 
-
     document.getElementById("buttonSendTx").addEventListener("click",function()
     {
         console.log("********* send transaction *****************")
         //var from = document.getElementById("inputAccountAddress").value
-        var to = document.getElementById("inputContractAddress").value
+        var to = document.getElementById("inputReceiveAddress").value
         var amount = document.getElementById("inputAmount").value
         window.postMessage({
             "target": "contentscript",
@@ -117,7 +106,6 @@
             "method": "neb_sendTransaction",
         }, "*");
     });
-
 
     // listen message from contentscript
     window.addEventListener('message', function(e) {

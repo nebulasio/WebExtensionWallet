@@ -117,7 +117,9 @@ function onClickGenerate() {
         gaslimit = $("#limit").val();
         gasprice = $("#price").val();
         nonce = $("#nonce").val();
-        contract = JSON.parse($("#contract").val());
+
+        if($("#contract").val())
+            contract = JSON.parse($("#contract").val());
 
         if (gLastGenerateInfo.fromAddress != fromAddress ||
             gLastGenerateInfo.toAddress != toAddress ||
