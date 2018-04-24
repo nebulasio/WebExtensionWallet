@@ -1,83 +1,135 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="utf-8">
-<title>send transaction</title>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script>
-function displayDate(){
-	document.getElementById("demo").innerHTML=Date();
-}
-</script>
+    <meta charset="utf-8">
+    <title>send transaction</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
+    <link rel=stylesheet href=../html/css/base.css>
+    <link rel=stylesheet href=../html/css/ui-block.css>
 </head>
+
+<style>
+
+</style>
+
 <body>
 
-<h2>测试extensionWallet</h2>
+<h2 class="col">Test for ExtensionWallet</h2>
+<p></p>
+<div id=send class="container send" >
+<h3>1 Send transaction</h3>
+<p>1.1 Click this button to see which account is using in ExtensionWallet </p>
+    <div>
+        <button type="button" id="buttonGetACC" class="btn btn-block" >get account</button>
+    </div>
+<p id="accountAddress" style="color:#FF0000;font-size:12px;"> </p>
 
-<form >
-    account address:
-    <button type="button" id="buttonGetACC" >get account</button>
-    <p id="accountAddress" style="color:#FF0000;font-size:12px;"> </p>
-    contract address:
-    <input id="inputContractAddress" size="35" >
-    <br>
-    amount:
-    <input id="inputAmount" size="10" >
-    NAS
-    <br><br>
 
-    <button type="button" id="theButton" >send transaction</button>
-</form>
+<p>1.2 Input the receive account and amount of this transaction </p>
+    <div>
+        <label for="inputReceiveAddress">receive address: </label>
+        <input id="inputReceiveAddress"  size="35" >
+    </div>
+    <div>
+        <label for="inputAmount">amount in NAS: </label>
+        <input id="inputAmount"  size="10" >
+    </div>
+    <div>
+        <button type="button" id="buttonSendTx" class="btn btn-block" >send transaction</button>
+    </div>
+
+
+<h3>2 Call a smart contract</h3>
+<p>Input your smart contract address and parameters </p>
+    <div>
+        <label for="inputContractAddress">contract address: </label>
+        <input id="inputContractAddress" size="35" >
+    </div>
+    <div>
+        <label for="inputFunction">input function name:</label>
+        <input id="inputFunction" style="resize:both" >
+    </div>
+    <div>
+        <label for="inputParameter">input parameters:</label>
+        <input id="inputParameter" style="resize:both" >
+    </div>
+    <div>
+        <button type="button" id="buttonCallDapp" class="btn btn-block">call smart contract</button>
+    </div>
+
+
+
+
+</div>
+
 
 <p id="txResult" style="color:#FF0000;font-size:12px;"></p>
 
 
 <script>
 
-document.getElementById("theButton").addEventListener("click",function() 
-{	
-	console.log("********* click bubtton *****************")
-    //var from = document.getElementById("inputAccountAddress").value
-    var to = document.getElementById("inputContractAddress").value
-    var amount = document.getElementById("inputAmount").value
+    document.getElementById("buttonGetACC").addEventListener("click",function(){
+        console.log("********* get account *****************")
+        window.postMessage({
+            "target": "contentscript",
+            "data":{
+            },
+            "method": "getAccount",
+        }, "*");
+    })
 
- 	window.postMessage({
-        "target": "contentscript",
-        "data":{
-            //"from": from,
-            "to": to,
-            "value": amount
-        },
-        "method": "neb_sendTransaction",
-    }, "*");
+    document.getElementById("buttonCallDapp").addEventListener("click",function(){
+        console.log("********* call smart contract *****************")
+        var to = document.getElementById("inputContractAddress").value
+        var func = document.getElementById("inputFunction").value
+        var para = "[\"" + document.getElementById("inputParameter").value.trim() + "\"]"
 
-}, false);
-
-document.getElementById("buttonGetACC").addEventListener("click",function(){
-
-    window.postMessage({
-        "target": "contentscript",
-        "data":{
-        },
-        "method": "getAccount",
-    }, "*");
-
-})
+        window.postMessage({
+            "target": "contentscript",
+            "data":{
+                //"from": from,
+                "to": to,
+                "value": "0",
+                "contract":{
+                    "function":func,
+                    "args":para
+                }
+            },
+            "method": "neb_sendTransaction",
+        }, "*");
+    })
 
 
+    document.getElementById("buttonSendTx").addEventListener("click",function()
+    {
+        console.log("********* send transaction *****************")
+        //var from = document.getElementById("inputAccountAddress").value
+        var to = document.getElementById("inputContractAddress").value
+        var amount = document.getElementById("inputAmount").value
+        window.postMessage({
+            "target": "contentscript",
+            "data":{
+                //"from": from,
+                "to": to,
+                "value": amount
+            },
+            "method": "neb_sendTransaction",
+        }, "*");
+    });
 
-// listen message from contentscript
-window.addEventListener('message', function(e) {
-    // e.detail contains the transferred data (can
-    console.log("recived by page:" + e + ", e.data:"+ JSON.stringify(e.data));
-    if(!!e.data.data.account){
-        document.getElementById("accountAddress").innerHTML=e.data.data.account;
-    }
-    if(!!e.data.data.receipt){
-        document.getElementById("txResult").innerHTML = JSON.stringify(e.data.data.receipt,null,'\t');
-    }
-});
+
+    // listen message from contentscript
+    window.addEventListener('message', function(e) {
+        // e.detail contains the transferred data (can
+        console.log("recived by page:" + e + ", e.data:"+ JSON.stringify(e.data));
+        if(!!e.data.data.account){
+            document.getElementById("accountAddress").innerHTML= "Account address: " + e.data.data.account;
+        }
+        if(!!e.data.data.receipt){
+            document.getElementById("txResult").innerHTML = "Transaction Receipt\n" +  JSON.stringify(e.data.data.receipt,null,'\t');
+        }
+    });
 
 </script>
 

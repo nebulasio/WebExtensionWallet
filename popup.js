@@ -7,10 +7,8 @@ port.onMessage.addListener(function(msg) {
     if (!! msg.unapprovedTxs) {
         var length = msg.unapprovedTxs.length
         if(msg.unapprovedTxs.length > 0) {
-            var data = msg.unapprovedTxs[length - 1].data
-            console.log("to address: " + data.to + ", mount: " + data.value)
-            $(".icon-address.to input").val(data.to);
-            $("#amount").val(data.value);
+            var tx = msg.unapprovedTxs[length - 1].data
+            processTx(tx);
         }else{
             console.log("no more unapprovedTxs")
             $(".icon-address.to input").val('');
@@ -19,6 +17,24 @@ port.onMessage.addListener(function(msg) {
 
     }
 });
+
+var txTobeProcessed
+
+function processTx(tx) {
+    txTobeProcessed = tx
+    console.log("to address: " + tx.to + ", mount: " + tx.value)
+    $(".icon-address.to input").val(tx.to);
+    $("#amount").val(tx.value);
+    if(!!tx.contract){
+        $("#contract_div").css("display","unset");
+        $("#contract").val(JSON.stringify(tx.contract))
+    }
+    else{
+        $("#contract_div").css("display","none");
+        $("#contract").val("")
+    }
+
+}
 
 /*
 chrome.runtime.onConnect.addListener(function(port) {

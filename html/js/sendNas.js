@@ -107,6 +107,7 @@ function onClickGenerate() {
     })
 
     var fromAddress, toAddress, balance, amount, gaslimit, gasprice, nonce, bnAmount;
+    var contract;
 
     if (validateAll()) {
         fromAddress = $(".icon-address.from input").val();
@@ -116,6 +117,7 @@ function onClickGenerate() {
         gaslimit = $("#limit").val();
         gasprice = $("#price").val();
         nonce = $("#nonce").val();
+        contract = JSON.parse($("#contract").val());
 
         if (gLastGenerateInfo.fromAddress != fromAddress ||
             gLastGenerateInfo.toAddress != toAddress ||
@@ -123,7 +125,8 @@ function onClickGenerate() {
             gLastGenerateInfo.amount != amount ||
             gLastGenerateInfo.gaslimit != gaslimit ||
             gLastGenerateInfo.gasprice != gasprice ||
-            gLastGenerateInfo.nonce != nonce) try {
+            gLastGenerateInfo.nonce != nonce ||
+            gLastGenerateInfo.contract != contract) try {
             var tmp = Unit.fromBasic(Utils.toBigNumber(gaslimit)
                 .times(Utils.toBigNumber(gasprice)), "nas");
 
@@ -133,7 +136,7 @@ function onClickGenerate() {
                 else
                     bnAmount = Utils.toBigNumber(balance).minus(Utils.toBigNumber(tmp));
 
-            gTx = new Transaction(parseInt(localSave.getItem("chainId")), gAccount, toAddress, Unit.nasToBasic(Utils.toBigNumber(amount)), parseInt(nonce), gasprice, gaslimit);
+            gTx = new Transaction(parseInt(localSave.getItem("chainId")), gAccount, toAddress, Unit.nasToBasic(Utils.toBigNumber(amount)), parseInt(nonce), gasprice, gaslimit, contract);
             gTx.signTransaction();
 
             $("#raw").val(gTx.toString());
@@ -178,6 +181,12 @@ function onClickModalConfirmS() {
             // console.log("sendRawTransaction resp: " + JSON.stringify(resp));
             mTxHash = resp.txhash;
 
+            return neb.api.getTransactionReceipt(mTxHash);
+        }).then(function (resp) {
+            $("#receipt").text(mTxHash).prop("href", "check.html?" + mTxHash);
+            $("#receipt_state").val(JSON.stringify(resp));
+            $("#receipt_div").show();
+
             console.log("txReceipt got...")  //send txhash msg to background.js
             port.postMessage({
                 src: "popup",dst:"background",
@@ -186,12 +195,6 @@ function onClickModalConfirmS() {
                 }
             });
 
-
-            return neb.api.getTransactionReceipt(mTxHash);
-        }).then(function (resp) {
-            $("#receipt").text(mTxHash).prop("href", "check.html?" + mTxHash);
-            $("#receipt_state").val(JSON.stringify(resp));
-            $("#receipt_div").show();
 
             // TODO 重新点击需要reset页面状态，清理setTimeout
             setTimeout(function () {

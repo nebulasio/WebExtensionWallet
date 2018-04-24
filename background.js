@@ -90,10 +90,14 @@ function updateBadgeText(){
         chrome.browserAction.setBadgeText({text: unapprovedTxs.length.toString()});
 }
 
-//initial
+//initiallize: updateBadgeText()
 document.addEventListener("DOMContentLoaded", function() {
     console.log("background page loaded...")
     updateBadgeText()
 });
 
+//just for debug, listen to port disconnect event
+chrome.runtime.Port.onDisconnect.addListener(function(message) {
+    console.log("Port disconnected: " + JSON.stringify(message))
+});
 

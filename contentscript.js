@@ -22,6 +22,7 @@ port.onMessage.addListener(function(msg) {
 
 });
 
+/*
 chrome.runtime.onConnect.addListener(function(port) {
     console.log("Connected ....." + port.name);
     port.onMessage.addListener(function(msg) {
@@ -29,6 +30,7 @@ chrome.runtime.onConnect.addListener(function(port) {
     })
 
 })
+*/
 
 //message from background
 chrome.runtime.onMessage.addListener(

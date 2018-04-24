@@ -1,9 +1,8 @@
 
 
-var nebula = new Object();
-	nebula.data = 'nebula';
+var nebulas = "nebulas";
 
-console.log("nebula is defined:" + nebula);
+console.log("nebulas is defined:" + nebulas);
 
 
 /*

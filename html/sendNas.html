@@ -30,7 +30,7 @@
             margin-top: 60px;
         }
 
-        .active1 {
+        #send .active1 {
             display: none;
         }
 
@@ -95,6 +95,10 @@
         <div class=form-group>
             <label for=nonce>Nonce</label>
             <input class=form-control id=nonce data-validate-order-matters="required number gt0">
+        </div>
+        <div id=contract_div class="form-group">
+            <label for=contract>Contract args</label>
+            <input class=form-control id=contract data-validate-order-matters="">
         </div>
         <button id=generate class="btn btn-block" data-i18n=send-nas/button/generate>Confirm Transaction</button>
         <button id=reject class="btn btn-block" data-i18n=send-nas/button/reject>Reject Transaction</button>
