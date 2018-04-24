@@ -1,0 +1,41 @@
+<html>
+    <head>
+        <!-- load javascript: jQuery 1.9.1 - http://jquery.com/ -->
+        <script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+
+        <!-- load javascript: Bootstrap v2.3.0 - http://twitter.github.com/bootstrap/ -->
+        <script type="text/javascript" src="js/bootstrap.min.js"></script>
+
+        <!-- load stylesheets: Bootstrap v2.3.0 - http://twitter.github.com/bootstrap/index.html -->
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"></link>
+
+        <!-- load stylesheets: internal -->
+        <link rel="stylesheet" type="text/css" href="css/global.css"></link>
+        <link rel="stylesheet" type="text/css" href="css/options.css"></link>
+    </head>
+    <body>
+        <div id="options-outer">
+            <div id="options-inner">
+                <div id="options-page-title" class="page-title">Chrome Extension Template v1.0</div>
+                <div id="options-page-subtitle" class="page-subtitle">Configuration and Settings</div>
+                <div id="options-area">
+                    <div class="control-group">
+                        <label class="control-label" for="favorite-movie-dropdown">Favorite Movie</label>
+                        <div class="controls">
+                            <select id="favorite-movie-dropdown" class="span5">
+                                <option value="Star Wars IV: A New Hope">Star Wars IV: A New Hope</option>
+                                <option value="Monthy Python: The Search for the Holy Grail">Monthy Python: The Search for the Holy Grail</option>
+                                <option vlaue="Star Trek II: The Wrath of Khan">Star Trek II: The Wrath of Khan</option>
+                                <option value="The Matrix">The Matrix</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <button id="save-options-button" class="btn btn-success">Save Options</button>
+            </div>
+        </div>
+        
+        <!-- load javascript: unique html page javascript file -->
+        <script type="text/javascript" src="js/options.js"></script>
+    </body>
+</html>

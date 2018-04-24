@@ -1,0 +1,95 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset=utf-8>
+    <link rel="icon shortcut" href=images/logo.png type=image/png>
+    <link rel=apple-touch-icon href=images/logo.png>
+    <link rel=stylesheet href=lib/bootstrap-4.0.0-dist/css/bootstrap.min.css>
+    <link rel=stylesheet href=css/base.css>
+    <link rel=stylesheet href=css/ui-block.css>
+    <meta name=viewport content="width=device-width">
+    <title>NEBULAS</title>
+</head>
+<style>
+    .qr_code>div {
+        display: inline-block;
+    }
+
+    .qr_code>.display-none {
+        display: none;
+    }
+
+    .transaction {
+        margin-top: 1rem;
+        display: none;
+    }
+    div#main-outer {
+        width: 400px;
+        margin: 5px;
+        /*background: #DDD;*/
+        border-radius: 5px;
+    }
+</style>
+<body>
+    <div id="main-outer">
+    <div class=logo-main></div>
+    <div class=header></div>
+    <div class="container select-wallet-file"></div>
+
+    <div id=walletinfo class="container transaction">
+        <div class=row>
+            <div class=col>
+                <div class=form-group>
+                    <label for=address data-i18n=wallet-info/your-addr>Your Address</label>
+                    <input type=text class=form-control id=address disabled>
+                </div>
+                <div class=form-group>
+                    <label for=amount data-i18n=wallet-info/acc-balance>Account Balance : </label>
+                    <input type=text id=amount class=form-control disabled>
+                </div>
+                <div class=form-group>
+                    <label for=keystore>
+                        <span data-i18n=keystore-file>Keystore File</span>
+                        (JSON / Recommended / Encrypted)
+                    </label>
+                    <button type=submit class="btn btn-default col-xs-12 col-sm-12 col-md-12 text-center" id=keystore data-i18n=download>Download</button>
+                </div>
+                <div class=form-group>
+                    <label for=password data-i18n=wallet-info/private-key>Private Key (unencrypted)</label>
+                    <input type=password id=password class=form-control disabled>
+                    <div>
+                        <input id=togglePassword type=checkbox>
+                        <label for=togglePassword>visible</label>
+                    </div>
+                </div>
+            </div>
+            <div class="col qr_code">
+                <div class=text-center>
+                    <label for=addressqr data-i18n=wallet-info/your-addr>Your Address</label>
+                    <div class=form-group id=addressqr></div>
+                </div>
+                <div class="display-none key_qr text-center">
+                    <label for=privateqr data-i18n=wallet-info/private-key>Private Key (unencrypted)</label>
+                    <div class=form-group id=privateqr></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class=footer></div>
+
+    <script src=lib/jquery-3.3.1.min.js></script>
+    <script src=lib/bootstrap-4.0.0-dist/js/bootstrap.bundle.min.js data-depends=jquery.slim></script>
+    <script src=lib/jquery.qrcode.min.js data-depends=jquery></script>
+    <script src=lib/bootbox.min.js data-depends="bootstrap jquery.slim"></script>
+    <script src=lib/Blob.js></script>
+    <script src=lib/FileSaver.min.js></script>
+    <script src=lib/nebulas.js></script>
+    <script src=js/1-localSave.js></script>
+    <script src=js/home.v1.js></script>
+    <script src=js/i18n.js data-depends=jquery.slim></script>
+    <script src=js/ui-block.js data-depends="bootbox blockies jquery.slim i18n.js nebulas.js"></script>
+    <script src=js/viewWalletInfo.js></script>
+    </div>
+</body>
+</html>

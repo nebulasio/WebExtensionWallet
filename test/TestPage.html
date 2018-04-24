@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>send transaction</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+function displayDate(){
+	document.getElementById("demo").innerHTML=Date();
+}
+</script>
+
+</head>
+<body>
+
+<h2>测试extensionWallet</h2>
+
+<form >
+    account address:
+    <button type="button" id="buttonGetACC" >get account</button>
+    <p id="accountAddress" style="color:#FF0000;font-size:12px;"> </p>
+    contract address:
+    <input id="inputContractAddress" size="35" >
+    <br>
+    amount:
+    <input id="inputAmount" size="10" >
+    NAS
+    <br><br>
+
+    <button type="button" id="theButton" >send transaction</button>
+</form>
+
+<p id="txResult" style="color:#FF0000;font-size:12px;"></p>
+
+
+<script>
+
+document.getElementById("theButton").addEventListener("click",function() 
+{	
+	console.log("********* click bubtton *****************")
+    //var from = document.getElementById("inputAccountAddress").value
+    var to = document.getElementById("inputContractAddress").value
+    var amount = document.getElementById("inputAmount").value
+
+ 	window.postMessage({
+        "target": "contentscript",
+        "data":{
+            //"from": from,
+            "to": to,
+            "value": amount
+        },
+        "method": "neb_sendTransaction",
+    }, "*");
+
+}, false);
+
+document.getElementById("buttonGetACC").addEventListener("click",function(){
+
+    window.postMessage({
+        "target": "contentscript",
+        "data":{
+        },
+        "method": "getAccount",
+    }, "*");
+
+})
+
+
+
+// listen message from contentscript
+window.addEventListener('message', function(e) {
+    // e.detail contains the transferred data (can
+    console.log("recived by page:" + e + ", e.data:"+ JSON.stringify(e.data));
+    if(!!e.data.data.account){
+        document.getElementById("accountAddress").innerHTML=e.data.data.account;
+    }
+    if(!!e.data.data.receipt){
+        document.getElementById("txResult").innerHTML = JSON.stringify(e.data.data.receipt,null,'\t');
+    }
+});
+
+</script>
+
+</body>
+</html>

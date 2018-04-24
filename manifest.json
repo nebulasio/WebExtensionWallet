@@ -1,0 +1,47 @@
+{
+    //manifest spec: http://developer.chrome.com/extensions/manifest.html
+    //required
+    "name": "extensionWallet",
+    "version": "1.0",
+    "manifest_version": 2,
+
+    //recommended
+    "description": "Chrome extension description written here.",
+    "icons": {
+        "19": "images/icon_19.png",
+        "38": "images/icon_38.png",
+        "128": "images/icon_128.png"
+    },
+
+    "permissions": ["activeTab", "declarativeContent", "storage", "tabs"],
+    "background": {
+      "scripts": ["background.js"],
+      "persistent": false
+    },
+
+    //required
+    "browser_action": {
+        "default_title": "Nebulas",
+        "default_icon": {
+            "19": "images/icon_19.png",
+            "38": "images/icon_38.png"
+        },
+//        "default_popup": "html/main.html"
+        "default_popup": "html/sendNas.html"
+    },
+
+   "content_scripts": [ {
+      "all_frames": true,
+      "js": [ "contentscript.js" ],
+      "matches": [ "file://*/*",  "http://*/*", "https://*/*" ],
+      "run_at": "document_start"
+   } ],
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+
+  "manifest_version": 2,
+  "web_accessible_resources": ["inpage.js","script.js","script1.js"],
+
+    //additional
+    "options_page": "html/options.html",
+    "homepage_url": "http://yourdomainhere.com/"
+}

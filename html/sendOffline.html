@@ -1,0 +1,213 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset=utf-8>
+    <link rel="icon shortcut" href=images/logo.png type=image/png>
+    <link rel=apple-touch-icon href=images/logo.png>
+    <link rel=stylesheet href=lib/bootstrap-4.0.0-dist/css/bootstrap.min.css>
+    <link rel=stylesheet href=css/base.css>
+    <link rel=stylesheet href=css/ui-block.css>
+    <meta name=viewport content="width=device-width">
+    <style>
+        .transaction {
+            display: none;
+        }
+
+        #qrcode {
+            text-align: center;
+        }
+
+        div#main-outer {
+            width: 400px;
+            margin: 5px;
+            /*background: #DDD;*/
+            border-radius: 5px;
+        }
+    </style>
+    <title>NEBULAS</title>
+</head>
+
+<body>
+    <div id="main-outer">
+    <div class=logo-main></div>
+    <div class=header></div>
+
+    <div id=step1 class="container wallet">
+        <div id=generate_infomation>
+            <h1 data-i18n=send-offline/step1>Step 1: Generate Information (Online Computer)</h1>
+            <div class=form-group>
+                <div data-i18n=send-nas/from-address>From Address</div>
+                <div class="from icon-address"></div>
+            </div>
+            <button id=generate-infomation class="btn btn-block" data-i18n=send-offline/gen-info>Inquire Information</button>
+            <div class="form-group row" id=information style=display:none;>
+                <div class=col>
+                    <label for=fa_gasprice data-i18n=gas-price>Gas Price:</label>
+                    <input type=text id=fa_gasprice class=form-control>
+                </div>
+                <div class=col>
+                    <label for=fa_nonce data-i18n=send-offline/nonce>Nonce: (next transaction nonce)</label>
+                    <input type=text id=fa_nonce class=form-control>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id=step2 class="container wallet">
+        <div id=generate_transaction>
+            <h1 data-i18n=send-offline/step2>Step 2: Generate Transaction (Offline Computer)</h1>
+            <div class="form-group row">
+                <div class=col>
+                    <label data-i18n=send-nas/from-address>From Address</label>
+                    <div class="icon-address from" data-disabled></div>
+                </div>
+                <div class=col>
+                    <label data-i18n=send-nas/to-address>To Address</label>
+                    <div class="icon-address to"></div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class=col>
+                    <label data-i18n=send-nas/amount>Value / Amount to Send</label>
+                    <div class=number-comma data-data-i18n=amount data-id=amount data-unit=nas data-validate="required number eqgt0"></div>
+                </div>
+                <div class=col>
+                    <label>Nonce</label>
+                    <input type=text class=form-control id=nonce data-validate-order-matters="required number gt0">
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class=col>
+                    <label>
+                        <span data-i18n=gas-limit>Gas Limit</span>
+                    </label>
+                    <div class=number-comma data-data-i18n=amount data-id=limit data-validate="required number gt0" data-value=200000></div>
+                </div>
+                <div class=col>
+                    <label>
+                        <span data-i18n=gas-price>Gas Price</span>
+                        <i>( 1 NAS = 1EWei = 10
+                            <sup>18</sup> Wei )</i>
+                    </label>
+                    <div class=number-comma data-data-i18n=amount data-id=price data-unit=wei data-validate="required number gt0" data-value=1000000></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container select-wallet-file"></div>
+
+    <div class="container transaction">
+        <button id=generate class="btn btn-block" data-i18n=send-nas/button/generate>Generate Transaction</button>
+        <div class=row>
+            <div class=col>
+                <div class=form-group>
+                    <label for=raw data-i18n=send-nas/raw>Raw Transaction</label>
+                    <textarea class=form-control rows=8 id=raw disabled></textarea>
+                </div>
+            </div>
+            <div class=col>
+                <div class=form-group>
+                    <label for=signed data-i18n=send-nas/signed>Signed Transaction</label>
+                    <textarea class=form-control rows=8 id=signed disabled></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id=step3 class="container wallet">
+        <h1 data-i18n=send-offline/step3>Step 3: Send / Publish Transaction (Online Computer)</h1>
+        <div class="form-group row">
+            <div class=col>
+                <label for=signedoffline data-i18n=send-nas/signed>Signed Transaction</label>
+                <textarea class=form-control rows=8 id=signedoffline></textarea>
+            </div>
+            <div class=col>
+                <div id=qrcode style=text-align:center;>
+                </div>
+            </div>
+        </div>
+        <div>
+            <button data-toggle=modal data-target=#exampleModal class="btn btn-block send" data-i18n=send-nas/send>Send Transaction</button>
+        </div>
+    </div>
+
+    <div class="container transaction" id=receipt_div>
+        <span data-i18n=contract/txhash></span>
+        <i data-i18n=contract/clickToCheck></i>&darr;
+        <a id=receipt></a>
+        <div class=form-group>
+            <label for=signed data-i18n=send-nas/receipt>receipt :</label>
+            <textarea id=receipt_state rows=6 class=form-control disabled></textarea>
+        </div>
+    </div>
+
+    <div class="fade modal" id=exampleModal tabindex=-1 role=dialog aria-labelledby=exampleModalLabel aria-hidden=true>
+        <div class=modal-dialog role=document>
+            <div class=modal-content>
+                <div class=modal-header>
+                    <h5 class=modal-title id=exampleModalLabel data-i18n=send-nas/transfer_msg>transfer message :</h5>
+                    <button type=button class=close data-dismiss=modal aria-label=Close>
+                        <span aria-hidden=true>&times;</span>
+                    </button>
+                </div>
+                <div class=modal-body>
+                    <div>
+                        <label data-i18n=send-nas/from-address>From Address</label>
+                        <input type=text class=form-control id=for_addr disabled>
+                    </div>
+                    <div>
+                        <label data-i18n=send-nas/to-address>To Address</label>
+                        <input type=text class=form-control id=to_addr disabled>
+                    </div>
+                    <div>
+                        <label for=amount data-i18n=send-nas/amount>Value / Amount to Send</label>
+                        <div class=number-comma data-data-i18n=amount data-id=value data-unit=nas data-disabled></div>
+                    </div>
+                    <!-- <div class=data>
+                        <label>data</label>
+                        <input type=text class=data id=data disabled style="width: 100%;">
+                    </div> -->
+                </div>
+                <div class=modal-footer>
+                    <button class="btn btn-secondary" data-dismiss=modal data-i18n=send-nas/close>Close</button>
+                    <button class="btn btn-primary send" data-dismiss=modal data-i18n=send-nas/check></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="fade modal" tabindex=-1 id=info role=dialog>
+        <div class=modal-dialog role=document>
+            <div class=modal-content>
+                <div class=modal-header>
+                    <button type=button class=close data-dismiss=modal aria-label=Close>
+                        <span aria-hidden=true>&times;</span>
+                    </button>
+                    <h4 class=modal-title>info</h4>
+                </div>
+                <div class=modal-body>
+                    <p>unlocking&hellip;</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class=footer></div>
+
+    <script src=lib/jquery-3.3.1.min.js></script>
+    <script src=lib/bootstrap-4.0.0-dist/js/bootstrap.bundle.min.js data-depends=jquery.slim></script>
+    <script src=lib/bootbox.min.js data-depends="bootstrap jquery.slim"></script>
+    <script src=lib/jquery.qrcode.min.js data-depends=jquery></script>
+    <script src=lib/blockies.min.js></script>
+    <script src=lib/nebulas.js></script>
+    <script src=js/1-localSave.js></script>
+    <script src=js/home.v1.js></script>
+    <script src=js/i18n.js data-depends=jquery.slim></script>
+    <script src=js/ui-block.js data-depends="bootbox blockies jquery.slim i18n.js nebulas.js"></script>
+    <script src=js/sendOffline.js></script>
+    </div>
+</body>
+
+</html>

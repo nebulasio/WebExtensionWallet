@@ -1,0 +1,186 @@
+
+/*
+    .footer
+    ============================================================
+    */
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.footer {
+    font-size: .8rem;
+    font-weight: 200;
+    padding-bottom: 20px;
+    padding-top: 20px;
+    margin-top: auto;
+}
+
+.footer .copyright {
+    color: #b2b2b2;
+}
+
+.footer nav {
+    margin: 5px 0;
+}
+
+.footer a {
+    border-bottom: 1px solid transparent;
+    margin: 0 7px;
+    padding-bottom: 3px;
+}
+
+.footer a:hover {
+    border-color: #333;
+    transition: border-color .3s;
+}
+
+.footer .logo {
+    background: url(../images/logo-b.png) center / contain no-repeat;
+    height: 1.8rem;
+}
+
+/*
+    .header
+    ============================================================
+    */
+
+.header > div {
+    display: flex;
+    justify-content: space-between;
+}
+
+.header > div > a {
+    overflow: hidden;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.header .checked {
+    border-bottom: 2px solid #000;
+}
+
+/*
+    .icon-address
+    ============================================================
+    */
+
+.icon-address {
+    position: relative;
+}
+
+.icon-address canvas {
+    font-size: .875rem;
+    height: 32px;
+    position: absolute;
+    right: .35em;
+    top: .35em;
+    width: 32px;
+}
+
+.icon-address input {
+    padding-right: 40px;
+}
+
+/*
+    .logo-main
+    ============================================================
+    */
+
+.logo-main .btn {
+    font-size: smaller;
+    font-weight: lighter;
+}
+
+.logo-main .col:first-child {
+    background: url(../images/logo-b.png) left center no-repeat content-box;
+    background-size: 134px 30px;
+    /*height: 70px;*/
+    height: 40px;
+}
+
+.logo-main .col:last-child {
+    align-items: center;
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* overrides - base.css */
+.logo-main .col:last-child .btn {
+    background-color: white;
+    color: #aaa;
+    margin: 0 10px 0 0;
+    padding: 0;
+}
+
+/*
+    .number-comma
+    ============================================================
+    */
+
+.number-comma {
+    position: relative;
+}
+
+.number-comma > div {
+    color: #aaa;
+    font-size: .875rem;
+    line-height: 3em;
+    pointer-events: none;
+    position: absolute;
+    right: 3px;
+    top: 0;
+}
+
+/*
+    .select-wallet-file
+    ============================================================
+    */
+
+.select-wallet-file label.file {
+    background-color: #f5f5f5;
+    border-radius: 3px;
+    cursor: pointer;
+    display: block;
+    font-size: 19px;
+    font-weight: bold;
+    height: auto; /* override bootstrap */
+    line-height: 50px;
+    overflow: hidden;
+    text-align: center;
+    text-overflow: ellipsis;
+}
+
+.select-wallet-file .empty {
+    border: 1px solid red;
+}
+
+.select-wallet-file input[type=file] {
+    display: none;
+}
+
+.select-wallet-file label.pass {
+    display: block;
+}
+
+.select-wallet-file input[type=password] {
+    background-color: #f5f5f5;
+    border: 1px solid #e8e8e8;
+    border-radius: 3px;
+    display: block;
+    height: 3em;
+    letter-spacing: .3em;
+    margin-top: 10px;
+    padding: 0 10px;
+    width: 100%;
+}
+
+.select-wallet-file label.hide {
+    display: none;
+}
+
+.select-wallet-file .comment {
+    font-size: .8rem;
+}
