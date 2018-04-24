@@ -33,7 +33,15 @@ function onClickDownloadButton() {
         address = account.getAddressString();
         keyStr = account.toKeyString(password);
         blob = new Blob([keyStr], { type: "application/json; charset=utf-8" });
-        saveAs(blob, address);
+        //saveAs(blob, address);
+        var i = window.document.createElement("a");
+        i.target = "_blank",
+        i.href = window.URL.createObjectURL(blob)
+        i.download = address
+        document.body.appendChild(i)
+        i.click()
+        document.body.removeChild(i)
+
         bootbox.hideAll();
     }
 }
