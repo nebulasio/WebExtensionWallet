@@ -1,13 +1,10 @@
 
-/*
-
-*/
-
 var s = document.createElement('script');
-s.src = chrome.extension.getURL('script.js');
+s.src = chrome.extension.getURL('inpage.js');
+//s.textContent = "inpage.js"
 var container = document.head||document.documentElement
-//container.insertBefore(s, container.children[0])
-//s.onload = function() {s.remove();};
+container.insertBefore(s, container.children[0])
+s.onload = function() {s.remove();};
 
 
 var port = chrome.runtime.connect({name: "contentscript"});
@@ -20,6 +17,11 @@ port.onMessage.addListener(function(msg) {
         "data":msg
     }, "*");
 
+});
+
+//just for debug, listen to port disconnect event
+port.onDisconnect.addListener(function(message) {
+    console.log("Port disconnected: " + JSON.stringify(message))
 });
 
 /*

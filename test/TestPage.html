@@ -54,6 +54,11 @@
     <div>
         <button type="button" id="buttonCallDapp" class="btn btn-block">call smart contract</button>
     </div>
+    <p style="color:gray;font-size: 12px">The above button using "sendTransaction" rpc</p>
+    <div>
+        <button type="button" id="buttonCallTest" class="btn btn-block">call smart contract</button>
+    </div>
+    <p style="color:gray;font-size: 12px">The above button using "call" rpc</p>
 </div>
 <p id="txResult" style="color:#FF0000;font-size:12px;"></p>
 
@@ -66,27 +71,6 @@
             "data":{
             },
             "method": "getAccount",
-        }, "*");
-    })
-
-    document.getElementById("buttonCallDapp").addEventListener("click",function(){
-        console.log("********* call smart contract *****************")
-        var to = document.getElementById("inputContractAddress").value
-        var func = document.getElementById("inputFunction").value
-        var para = "[\"" + document.getElementById("inputParameter").value.trim() + "\"]"
-
-        window.postMessage({
-            "target": "contentscript",
-            "data":{
-                //"from": from,
-                "to": to,
-                "value": "0",
-                "contract":{
-                    "function":func,
-                    "args":para
-                }
-            },
-            "method": "neb_sendTransaction",
         }, "*");
     })
 
@@ -103,9 +87,51 @@
                 "to": to,
                 "value": amount
             },
-            "method": "neb_sendTransaction",
+            "method": "neb_sendTransaction"
         }, "*");
     });
+
+    document.getElementById("buttonCallDapp").addEventListener("click",function(){
+        console.log("********* call smart contract \"sendTransaction\" *****************")
+        var to = document.getElementById("inputContractAddress").value
+        var func = document.getElementById("inputFunction").value
+        var para = "[\"" + document.getElementById("inputParameter").value.trim() + "\"]"
+
+        window.postMessage({
+            "target": "contentscript",
+            "data":{
+                //"from": from,
+                "to": to,
+                "value": "0",
+                "contract":{
+                    "function":func,
+                    "args":para
+                }
+            },
+            "method": "neb_sendTransaction"
+        }, "*");
+    })
+
+    document.getElementById("buttonCallTest").addEventListener("click",function(){
+        console.log("********* call smart contract by \"call\" *****************")
+        var to = document.getElementById("inputContractAddress").value
+        var func = document.getElementById("inputFunction").value
+        var para = "[\"" + document.getElementById("inputParameter").value.trim() + "\"]"
+
+        window.postMessage({
+            "target": "contentscript",
+            "data":{
+                //"from": from,
+                "to": to,
+                "value": "0",
+                "contract":{
+                    "function":func,
+                    "args":para
+                }
+            },
+            "method": "neb_call"
+        }, "*");
+    })
 
     // listen message from contentscript
     window.addEventListener('message', function(e) {
@@ -116,6 +142,9 @@
         }
         if(!!e.data.data.receipt){
             document.getElementById("txResult").innerHTML = "Transaction Receipt\n" +  JSON.stringify(e.data.data.receipt,null,'\t');
+        }
+        if(!!e.data.data.neb_call){
+            document.getElementById("txResult").innerHTML = "return of call\n" +  JSON.stringify(e.data.data.neb_call,null,'\t');
         }
     });
 

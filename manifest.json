@@ -15,7 +15,7 @@
 
     "permissions": ["activeTab", "declarativeContent", "storage", "tabs"],
     "background": {
-      "scripts": ["background.js"],
+      "scripts": ["html/lib/nebulas.js","html/js/1-localSave.js","background.js"],
       "persistent": false
     },
 

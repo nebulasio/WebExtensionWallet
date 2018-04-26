@@ -30,7 +30,7 @@
             margin-top: 60px;
         }
 
-        #send .active1 {
+        .active1 {
             display: none;
         }
 
@@ -98,7 +98,7 @@
         </div>
         <div id=contract_div class="form-group">
             <label for=contract>Contract args</label>
-            <input class=form-control id=contract data-validate-order-matters="">
+            <input class=form-control id=contract disabled >
         </div>
         <button id=generate class="btn btn-block" data-i18n=send-nas/button/generate>Confirm Transaction</button>
         <button id=reject class="btn btn-block" data-i18n=send-nas/button/reject>Reject Transaction</button>
@@ -174,6 +174,7 @@
 
     <div class=footer></div>
 
+        <script src=../popup.js></script>
     <script src=lib/jquery-3.3.1.min.js></script>
     <script src=lib/bootstrap-4.0.0-dist/js/bootstrap.bundle.min.js data-depends=jquery.slim></script>
     <script src=lib/bootbox.min.js data-depends="bootstrap jquery.slim"></script>
@@ -185,7 +186,6 @@
     <script src=js/i18n.js data-depends=jquery.slim></script>
     <script src=js/ui-block.js data-depends="bootbox blockies jquery.slim i18n.js nebulas.js"></script>
     <script src=js/sendNas.js></script>
-        <script src=../popup.js></script>
     </div>
 </body>
 </html>

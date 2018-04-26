@@ -17,6 +17,10 @@ port.onMessage.addListener(function(msg) {
 
     }
 });
+//just for debug, listen to port disconnect event
+port.onDisconnect.addListener(function(message) {
+    console.log("Port disconnected: " + JSON.stringify(message))
+});
 
 var txTobeProcessed
 
@@ -49,6 +53,39 @@ chrome.runtime.onConnect.addListener(function(port) {
 //load stored keyfle info from chrome.storage.local
 document.addEventListener("DOMContentLoaded", function() {
     console.log("popout page loaded...")
+    changeNetwork()
+    restoreAccount()
+});
+
+var AccAddress ;
+
+function getNextTx() {
+    console.log("to get next unapprovedTxs")
+    port.postMessage({
+        src: "popup",
+        dst:"background",
+        data: {
+            getNextTx : 'true'
+        }
+    });
+
+}
+function changeNetwork() {
+    var url = localSave.getItem("apiPrefix")
+    var chainId = localSave.getItem("chainId")
+    console.log("to change network")
+    port.postMessage({
+        src: "popup",
+        dst:"background",
+        data: {
+            network : url,
+            chainId : chainId
+        }
+    });
+}
+
+function restoreAccount() {
+
     chrome.storage.local.get(['keyInfo'], function(result) {
         console.log('keyInfo Value is :' + JSON.stringify(result.keyInfo));
         result = JSON.parse(result.keyInfo)
@@ -62,19 +99,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
     });
-});
-
-var AccAddress ;
-
-function getNextTx() {
-    port.postMessage({
-        src: "popup",
-        dst:"background",
-        data: {
-            getNextTx : 'true'
-        }
-    });
-
 }
 
 function UnlockFile( fileJson, password) {
@@ -108,7 +132,7 @@ function UnlockFile( fileJson, password) {
 
         neb.api.getAccountState(address)
             .then(function (resp) {
-                var nas = Unit.fromBasic(resp.balance, "nas").toNumber();
+                var nas = require("nebulas").Unit.fromBasic(resp.balance, "nas").toNumber();
                 console.log("\tbalance: " + nas +", nonce: " + resp.nonce)
                 $("#balance").val(nas).trigger("input"); // add comma & unit from value, needs trigger 'input' event if via set o.value
                 $("#nonce").val(parseInt(resp.nonce || 0) + 1);

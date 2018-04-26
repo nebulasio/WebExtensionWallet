@@ -47,7 +47,7 @@ window.postMessage({
     "method": "neb_sendTransaction",
 }, "*");
 ```
-These two example above is similar with Nebulas rpc interface, we will add all the rpc interfaces to ExtensionWallet.
+These two example above is similar with [Nebulas rpc](https://github.com/nebulasio/wiki/blob/master/rpc_admin.md#sendtransaction) interface, we will add all the rpc interfaces to ExtensionWallet.
 
 And you can use test/TestPage.html to take a test.
 
