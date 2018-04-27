@@ -1,11 +1,17 @@
 # WebExtensionWallet
 
 ### 1. Install
-```
+
 (1) clone the repo into your local environment.
+
+  ![](resources/download-from-fithub.png)
+
 (2) Open your chrome browser, go to chrome://extensions/ and check the box for Developer mode in the top right.
+
 (3) Click the Load unpacked extension button and select your local repo folder for your extension.
-```
+
+  ![](resources/add-chrome-extension.png)
+
 
 ### 2. Brief introduction of using our ExtensionWallet
 ```
