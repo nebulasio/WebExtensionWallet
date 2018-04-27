@@ -187,6 +187,8 @@ function onClickModalConfirmS() {
             // console.log("sendRawTransaction resp: " + JSON.stringify(resp));
             mTxHash = resp.txhash;
 
+            window.location.href = "check.html?" + mTxHash;
+
             return neb.api.getTransactionReceipt(mTxHash);
         }).then(function (resp) {
             $("#receipt").text(mTxHash).prop("href", "check.html?" + mTxHash);
@@ -224,5 +226,5 @@ function onClickModalConfirmS() {
             });
         });
 
-    $("#receipt_div").show();
+    // $("#receipt_div").show();
 }
