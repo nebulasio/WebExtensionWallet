@@ -1,11 +1,14 @@
 
-var s = document.createElement('script');
-s.src = chrome.extension.getURL('inpage.js');
-//s.textContent = "inpage.js"
-var container = document.head||document.documentElement
-container.insertBefore(s, container.children[0])
-s.onload = function() {s.remove();};
+function setupInjection (file) {
+    var s = document.createElement('script');
+    s.src = chrome.extension.getURL(file);
+    var container = document.head || document.documentElement
+    container.insertBefore(s, container.children[0])
+    s.onload = function() {s.remove();};
+}
 
+var file = 'html/lib/nebPay.js'
+setupInjection (file);
 
 var port = chrome.runtime.connect({name: "contentscript"});
 port.postMessage({src: "contentScript",dst:"background"});

@@ -64,6 +64,22 @@
 
 <script>
 
+    document.addEventListener("DOMContentLoaded", function() {
+        console.log("web page loaded...")
+        setTimeout(checkNebpay(),1000);
+
+    });
+
+    var NebPay;
+    function checkNebpay() {
+        console.log("check nebpay")
+        try{
+            NebPay = require("nebpay");
+        }catch(e){
+            alert ("Extension wallet is not installed, please install it first.")
+        }
+    }
+
     document.getElementById("buttonGetACC").addEventListener("click",function(){
         console.log("********* get account *****************")
         window.postMessage({
@@ -83,7 +99,6 @@
         window.postMessage({
             "target": "contentscript",
             "data":{
-                //"from": from,
                 "to": to,
                 "value": amount
             },

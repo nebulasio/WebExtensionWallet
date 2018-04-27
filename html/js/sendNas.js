@@ -92,7 +92,8 @@ function onClickReject() {
         }
 
     })
-    getNextTx()
+    //getNextTx()
+    window.close()
 }
 
 
@@ -148,7 +149,7 @@ function onClickGenerate() {
                 .qrcode(gTx.toProtoString())
                 .replaceAll('#addressqr');
 
-            $("#transaction").show();
+            //$("#transaction").show();
 
             gLastGenerateInfo.fromAddress = fromAddress;
             gLastGenerateInfo.toAddress = toAddress;
@@ -157,6 +158,9 @@ function onClickGenerate() {
             gLastGenerateInfo.gaslimit = gaslimit;
             gLastGenerateInfo.gasprice = gasprice;
             gLastGenerateInfo.nonce = nonce;
+
+            onClickSendTransaction()
+
         } catch (e) {
             bootbox.dialog({
                 backdrop: true,
@@ -219,4 +223,6 @@ function onClickModalConfirmS() {
                 title: "Error"
             });
         });
+
+    $("#receipt_div").show();
 }

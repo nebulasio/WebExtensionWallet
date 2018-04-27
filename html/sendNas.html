@@ -100,7 +100,7 @@
             <label for=contract>Contract args</label>
             <input class=form-control id=contract disabled >
         </div>
-        <button id=generate class="btn btn-block" data-i18n=send-nas/button/generate>Confirm Transaction</button>
+        <button id=generate class="btn btn-block" data-toggle=modal data-target=#modal-confirm  data-i18n=send-nas/button/generate>Confirm Transaction</button>
         <button id=reject class="btn btn-block" data-i18n=send-nas/button/reject>Reject Transaction</button>
     </div>
 
@@ -124,15 +124,16 @@
         </div>
         <button type=button id=send_transaction class="btn btn-block" data-toggle=modal data-target=#modal-confirm data-i18n=send-nas/send>Send </button>
 
-        <!-- Transaction -->
-        <div class="container transaction" id=receipt_div>
-            <span data-i18n=contract/txhash></span>
-            <i data-i18n=contract/clickToCheck></i>&darr;
-            <a id=receipt></a>
-            <div class=form-group>
-                <label for=signed data-i18n=send-nas/receipt>receipt :</label>
-                <textarea id=receipt_state rows=6 class=form-control disabled></textarea>
-            </div>
+    </div>
+
+    <!-- Transaction -->
+    <div class="container transaction" id=receipt_div>
+        <span data-i18n=contract/txhash></span>
+        <i data-i18n=contract/clickToCheck></i>&darr;
+        <a id=receipt></a>
+        <div class=form-group>
+            <label for=signed data-i18n=send-nas/receipt>receipt :</label>
+            <textarea id=receipt_state rows=6 class=form-control disabled></textarea>
         </div>
     </div>
 

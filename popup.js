@@ -55,6 +55,7 @@ document.addEventListener("DOMContentLoaded", function() {
     console.log("popout page loaded...")
     changeNetwork()
     restoreAccount()
+    $("#contract_div").css("display","none");
 });
 
 var AccAddress ;
