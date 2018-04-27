@@ -54,6 +54,10 @@
             border-radius: 5px;
         }
 
+        .table table-striped {
+
+        }
+
         .check_words{
             font-size: 12px;
         }
@@ -81,34 +85,34 @@
     </section>
 
     <section class="active1 container information" id=info>
-        <h4 data-i18n=check/tx-details>Transaction Details</h4>
+        <h4 data-i18n=check/tx-details>Transaction Result</h4>
         <br>
         <table class="table table-striped">
             <tbody>
-                <tr>
-                    <td>TX Hash</td>
-                    <td class=tx_hash></td>
-                </tr>
-                <tr>
-                    <td>Contract address</td>
-                    <td class=contract_addr></td>
-                </tr>
+                <!--<tr>-->
+                    <!--<td>TX Hash</td>-->
+                    <!--<td class=tx_hash></td>-->
+                <!--</tr>-->
+                <!--<tr>-->
+                    <!--<td>Contract address</td>-->
+                    <!--<td class=contract_addr></td>-->
+                <!--</tr>-->
                 <tr>
                     <td>TxReceipt Status</td>
                     <td class=status></td>
                 </tr>
-                <tr>
-                    <td data-i18n=send-nas/from-address>From Address</td>
-                    <td class=from_address></td>
-                </tr>
-                <tr>
-                    <td data-i18n=send-nas/to-address>To Address</td>
-                    <td class=to_address></td>
-                </tr>
+                <!--<tr>-->
+                    <!--<td data-i18n=send-nas/from-address>From Address</td>-->
+                    <!--<td class=from_address style="text-align: left;font-size: 12px;" ></td>-->
+                <!--</tr>-->
+                <!--<tr>-->
+                    <!--<td data-i18n=send-nas/to-address>To Address</td>-->
+                    <!--<td class=to_address style="text-align: left;font-size: 12px;"></td>-->
+                <!--</tr>-->
                 <tr class=mod-child>
                     <td data-i18n=amount>Amount</td>
                     <td>
-                        <div class="amount number-comma" data-disabled data-unit=wei></div>
+                        <div class="amount number-comma" data-disabled data-unit=wei style="text-align: left"></div>
                     </td>
                 </tr>
                 <tr>
@@ -117,8 +121,8 @@
                 </tr>
                 <tr class=mod-child>
                     <td data-i18n=gas-price>Gas Price</td>
-                    <td>
-                        <div class="gas-price number-comma" data-disabled data-unit=wei></div>
+                    <td style="text-align: left">
+                        <div class="gas-price number-comma"  data-disabled data-unit=wei  style="text-align: left"></div>
                     </td>
                 </tr>
                 <tr class=mod-child>
@@ -129,16 +133,16 @@
                 </tr>
                 <tr class=mod-child>
                     <td data-i18n=gas-used>Gas Used</td>
-                    <td>
+                    <td style="text-align: left">
                         <div class="gas-used number-comma" data-disabled data-unit=wei></div>
                     </td>
                 </tr>
-                <tr>
-                    <td data-i18n=data>Data</td>
-                    <td class=data>
-                        <textarea name=code id=code cols=80 rows=6 wrap=virtual disabled></textarea>
-                    </td>
-                </tr>
+                <!--<tr>-->
+                    <!--<td data-i18n=data>Data</td>-->
+                    <!--<td class=data>-->
+                        <!--<textarea name=code id=code cols=80 rows=6 wrap=virtual disabled></textarea>-->
+                    <!--</td>-->
+                <!--</tr>-->
             </tbody>
         </table>
     </section>
@@ -157,7 +161,7 @@
 
     <div class=footer></div>
 
-        <script src=../popup.js></script>
+    <script src=../popup.js></script>
     <script src=lib/jquery-3.3.1.min.js></script>
     <script src=lib/bootstrap-4.0.0-dist/js/bootstrap.bundle.min.js data-depends=jquery.slim></script>
     <script src=lib/bootbox.min.js data-depends="bootstrap jquery.slim"></script>

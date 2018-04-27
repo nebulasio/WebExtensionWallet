@@ -93,7 +93,7 @@ var uiBlock = function () {
                     "    <a href=" + arr[1] + " data-i18n=header/send></a>" +
                    // "    <a href=" + arr[2] + " data-i18n=header/send-offline></a>" +
                    // "    <a href=" + arr[3] + " data-i18n=header/view></a>" +
-                    "    <a href=" + arr[4] + " data-i18n=header/check></a>" +
+                    "    <a href=" + arr[4] + " data-i18n=header/refresh_button></a>" +
                     //"    <a href=" + arr[5] + " data-i18n=header/contract></a>" +
                     "</div>" +
                     "<hr>"));
