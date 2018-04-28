@@ -2,7 +2,7 @@
 
 ### 1. Install
 
-(1) clone the repo into your local environment.
+(1) clone the repo into your local environment or download as a ZIP file.
 
   ![](resources/download-from-fithub.png)
 

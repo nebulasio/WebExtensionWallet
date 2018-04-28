@@ -144,7 +144,6 @@ var uiBlock = function () {
             apiList = [
                 { chainId: 1, name: "Mainnet", url: "https://mainnet.nebulas.io" },
                 { chainId: 1001, name: "Testnet", url: "https://testnet.nebulas.io" },
-                { chainId: 1002, name: "TestNeb2", url: "http://34.205.26.12:8685" },
                 { chainId: 1, name: "localhost:8685", url: "http://127.0.0.1:8685" }
             ];
             apiPrefix = (localSave.getItem("apiPrefix") || "").toLowerCase();

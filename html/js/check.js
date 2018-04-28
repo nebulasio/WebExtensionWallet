@@ -1,6 +1,7 @@
 var nebulas = require("nebulas"),
     Account = nebulas.Account,
     neb = new nebulas.Neb(),
+    Unit = nebulas.Unit;
     hash = location.search.slice(1),
     validateAll = uiBlock.validate();
 
@@ -11,12 +12,52 @@ uiBlock.insert({
     numberComma: ".number-comma"
 });
 
+$("#btn_done").hide()
+
 neb.setRequest(new nebulas.HttpRequest(localSave.getItem("apiPrefix") || "https://testnet.nebulas.io/"));
 $("#btn").on("click", onClickBtn);
+$("#btn_done").on("click", function () {
+    window.close()
+});
 
 if (hash) {
     $("#input").val(hash);
     $("#btn").trigger("click");
+}
+
+function setAutoCheck() {
+    if($(".status").text() !== "success"){
+        var interval = 1000
+        var second = 15
+        var number = second
+        var countDown = setInterval(function () {
+            if($(".status").text() === "success" ||
+                $(".status").text() === "fail"){
+                clearInterval(countDown)
+                //$("#counterDown").remove()
+                $("#btn").hide()
+                $("#btn_done").show()
+            }
+
+            if( $("#counterDown").length > 0){
+                $("#counterDown").text(' (' + number + ')')
+            }else{
+                var spanTag = document.createElement("span");
+                spanTag.id = "counterDown";
+                spanTag.innerHTML = '(' + number + ')';
+                $("#btn").append(spanTag);
+            }
+
+            if(number === 0){
+                number = second
+                onClickBtn()
+            }
+
+            number--;
+
+        }, interval)
+    }
+
 }
 
 function onClickBtn() {
@@ -44,6 +85,7 @@ function onClickBtn() {
             $(".errmsg").addClass("active1");
         }, 2000);
     }
+    setAutoCheck()
 }
 
 function doneGetTransactionReceipt(o) {
@@ -72,6 +114,7 @@ function doneGetTransactionReceipt(o) {
     $(".tx_hash").text(o.hash);
     $(".contract_addr").text(o.contract_address);
     $(".status").text(o.status == 1 ? "success" : (o.status == 0 ? "fail" : "pending"));
+    $(".status").css("color", o.status == 1 ? "green" : (o.status == 0 ? "red" : "blue"));
     $(".from_address").text(o.from);
     $(".to_address").text(o.to);
     $(".nonce").text(o.nonce);
