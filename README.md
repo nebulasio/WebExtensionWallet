@@ -25,20 +25,20 @@
 
 ### 3. Instructions on how to use WebExtensionApp in your webapp
 
-When developing your Dapp page, you can use `postMessage` API to communicate with ExtensionWallet, and use `window.addEventListener` to listen the message answer. Just as the example blew.
+When developing your Dapp page, you can use `postMessage` API to communicate with ExtensionWallet, and use `window.addEventListener` to listen the message answer. Just as the example below.
 
-To send a transaction with extensionWallet, you should use `postMessage` to send a message as blew:
+To send a transaction with extensionWallet, you should use `postMessage` to send a message as below:
 ```js
 window.postMessage({
-        "target": "contentscript", //
-        "data":{                //
+        "target": "contentscript",
+        "data":{
             "to": to,
             "value": amount
         },
         "method": "neb_sendTransaction",
     }, "*");
 ```
-To call a smart contract function with extensionWallet, you should use `postMessage` to send a message as blew:
+To call a smart contract function with extensionWallet, you should use `postMessage` to send a message as below:
 ```js
 window.postMessage({
     "target": "contentscript",
