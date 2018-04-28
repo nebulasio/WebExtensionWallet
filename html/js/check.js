@@ -2,7 +2,7 @@ var nebulas = require("nebulas"),
     Account = nebulas.Account,
     neb = new nebulas.Neb(),
     Unit = nebulas.Unit;
-    hash = location.search.slice(1),
+hash = location.search.slice(1),
     validateAll = uiBlock.validate();
 
 uiBlock.insert({
@@ -25,9 +25,13 @@ if (hash) {
     $("#btn").trigger("click");
 }
 
+var interval = 0;
 function setAutoCheck() {
+    if(interval === 1000)
+        return
+
     if($(".status").text() !== "success"){
-        var interval = 1000
+        interval = 1000
         var second = 15
         var number = second
         var countDown = setInterval(function () {
@@ -90,23 +94,23 @@ function onClickBtn() {
 
 function doneGetTransactionReceipt(o) {
 
-/*
-    if (o.data) {
-        data = atob(o.data);
-        lang = Prism.languages.javascript;
+    /*
+        if (o.data) {
+            data = atob(o.data);
+            lang = Prism.languages.javascript;
 
-        if (o.type == "binary")
-            s = data;
-        else if (o.type == "deploy")
-            s = Prism.highlight(js_beautify(JSON.parse(data).Source), lang);
-        else if (o.type == "call")
-            s = Prism.highlight(js_beautify(data), lang);
-        else
-            s = "0x0";
+            if (o.type == "binary")
+                s = data;
+            else if (o.type == "deploy")
+                s = Prism.highlight(js_beautify(JSON.parse(data).Source), lang);
+            else if (o.type == "call")
+                s = Prism.highlight(js_beautify(data), lang);
+            else
+                s = "0x0";
 
-        $("#code").html(s);
-    }
-*/
+            $("#code").html(s);
+        }
+    */
     $(".modal.loading").modal("hide");
 
     $("#info").removeClass("active1");
