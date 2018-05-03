@@ -221,8 +221,10 @@ var i18n = function () {
         var lang = localSave.getItem("lang"),
             table = {
                 unknown: {
-                    en: "unknown error",
-                    zh: "未知错误"
+                    //en: "unknown error",
+                    //zh: "未知错误"
+                    en: s,
+                    zh: s
                 },
                 "Network Error": {
                     en: s,
