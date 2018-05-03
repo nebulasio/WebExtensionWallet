@@ -7,14 +7,14 @@ function setupInjection (file) {
     s.onload = function() {s.remove();};
 }
 
-var file = 'html/lib/nebPay.js'
+var file = 'inpage.js'
 setupInjection (file);
 
 var port = chrome.runtime.connect({name: "contentscript"});
 port.postMessage({src: "contentScript",dst:"background"});
 
 port.onMessage.addListener(function(msg) {
-    console.log("msg listened: " +JSON.stringify(msg));
+    console.log("port.onMessage: " +JSON.stringify(msg));
 
     window.postMessage({        //forward msg from background to webpage
         "data":msg
@@ -27,15 +27,6 @@ port.onDisconnect.addListener(function(message) {
     console.log("Port disconnected: " + JSON.stringify(message))
 });
 
-/*
-chrome.runtime.onConnect.addListener(function(port) {
-    console.log("Connected ....." + port.name);
-    port.onMessage.addListener(function(msg) {
-        console.log("msg listened: " + JSON.stringify(msg));
-    })
-
-})
-*/
 
 //message from background
 chrome.runtime.onMessage.addListener(
@@ -43,6 +34,13 @@ chrome.runtime.onMessage.addListener(
         console.log(sender.tab ?
             "from a content script:" + sender.tab.url :
             "from the extension");
+        console.log("chrome.runtime.onMessage." + JSON.stringify(request));
+
+        if(request.logo === "nebulas"){
+            request.src = "content"
+            window.postMessage(request, "*");        //forward msg from background to webpage
+            return
+        }
 
         window.postMessage({        //forward msg from background to webpage
             "data": request
@@ -50,16 +48,27 @@ chrome.runtime.onMessage.addListener(
 
     });
 
-// Event listener
+// Event listener, msg from web-page
 window.addEventListener('message', function(e) {
     //if (e.source != window)
     //    return;
 
-    console.log("contentscript.js: received message event:" + ", stringify msg.data: "+JSON.stringify(e.data) );
-    //outputObj(e)
-    port.postMessage({          //forward msg from webpage to background
-        src: "contentScript",
-        dst:"background",
-        data: e.data })
+    console.log("window.addEventListener: msg.data: " + JSON.stringify(e.data) );
+
+    if(e.data.target === "contentscript") {
+        port.postMessage({          //forward msg from webpage to background, [just for compatible]
+            src: "contentScript",
+            dst: "background",
+            data: e.data
+        })
+    }
+
+    if(e.data.logo === "nebulas" && e.data.src === "nebPay") {  //msg from nebPay
+        e.data.src = "content"
+        chrome.runtime.sendMessage(e.data, function (response) {
+            console.log("response: " + JSON.stringify(response));
+        });
+    }
+
 });
 

@@ -22,13 +22,28 @@ port.onDisconnect.addListener(function(message) {
     console.log("Port disconnected: " + JSON.stringify(message))
 });
 
+function messageToBackground(name,msg) {
+    var data = {}
+    data[name] = msg
+    port.postMessage({
+        src: "popup",dst:"background",
+        serialNumber: serialNumber || "",
+        data : data
+        // data: {
+        //     name : msg
+        // }
+    });
+}
+
 var txTobeProcessed
+var serialNumber
 
 function processTx(tx) {
     txTobeProcessed = tx
     console.log("to address: " + tx.to + ", mount: " + tx.value)
     $(".icon-address.to input").val(tx.to);
     $("#amount").val(tx.value);
+    serialNumber = tx.serialNumber || "";
     if(!!tx.contract){
         $("#contract_div").css("display","unset");
         $("#contract").val(JSON.stringify(tx.contract))
@@ -62,27 +77,32 @@ var AccAddress ;
 
 function getNextTx() {
     console.log("to get next unapprovedTxs")
-    port.postMessage({
-        src: "popup",
-        dst:"background",
-        data: {
-            getNextTx : 'true'
-        }
-    });
+    // port.postMessage({
+    //     src: "popup",
+    //     dst:"background",
+    //     data: {
+    //         getNextTx : 'true'
+    //     }
+    // });
+    messageToBackground("getNextTx","true")
 
 }
 function changeNetwork() {
     var url = localSave.getItem("apiPrefix")
     var chainId = localSave.getItem("chainId")
     console.log("to change network")
-    port.postMessage({
-        src: "popup",
-        dst:"background",
-        data: {
-            network : url,
-            chainId : chainId
-        }
-    });
+    // port.postMessage({
+    //     src: "popup",
+    //     dst:"background",
+    //     data: {
+    //         network : url,
+    //         chainId : chainId
+    //     }
+    // });
+    messageToBackground("data",{
+        "network" : url,
+        "chainId" : chainId
+    })
 }
 
 function restoreAccount() {

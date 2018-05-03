@@ -85,13 +85,16 @@ function onUnlockFile(swf, fileJson, account, password) {
 }
 
 function onClickReject() {
-    port.postMessage({
-        src: "popup",dst:"background",
-        data: {
-            reject : "true"
-        }
+    // port.postMessage({
+    //     src: "popup",dst:"background",
+    //     data: {
+    //         reject : "true"
+    //     }
+    //
+    // })
+    messageToBackground("reject","true")
 
-    })
+    messageToBackground("default","Error: Transaction rejected by user")
     //getNextTx()
     window.close()
 }
@@ -99,13 +102,13 @@ function onClickReject() {
 
 function onClickGenerate() {
 
-    port.postMessage({
-        src: "popup",dst:"background",
-        data: {
-            generate : "true"
-        }
-
-    })
+    // port.postMessage({
+    //     src: "popup",dst:"background",
+    //     data: {
+    //         generate : "true"
+    //     }
+    // })
+    messageToBackground("generate","true")
 
     var fromAddress, toAddress, balance, amount, gaslimit, gasprice, nonce, bnAmount;
     var contract;
@@ -187,6 +190,17 @@ function onClickModalConfirmS() {
             // console.log("sendRawTransaction resp: " + JSON.stringify(resp));
             mTxHash = resp.txhash;
 
+            console.log("txHash got...")  //send txhash msg to background.js
+
+            // port.postMessage({
+            //     src: "popup",dst:"background",
+            //     serialNumber: serialNumber || "",
+            //     data: {
+            //         txhash : resp
+            //     }
+            // });
+            messageToBackground("txhash",resp)
+
             window.location.href = "check.html?" + mTxHash;
 
             return neb.api.getTransactionReceipt(mTxHash);
@@ -196,13 +210,14 @@ function onClickModalConfirmS() {
             $("#receipt_div").show();
 
             console.log("txReceipt got...")  //send txhash msg to background.js
-            port.postMessage({
-                src: "popup",dst:"background",
-                data: {
-                    Receipt : resp
-                }
-            });
-
+            // port.postMessage({
+            //     src: "popup",dst:"background",
+            //     serialNumber: serialNumber || "",
+            //     data: {
+            //         receipt : resp
+            //     }
+            // });
+            messageToBackground("receipt",resp)
 
             // TODO 重新点击需要reset页面状态，清理setTimeout
             setTimeout(function () {

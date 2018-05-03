@@ -89,11 +89,7 @@ chrome.runtime.onConnect.addListener(function(port) {
 		    if (!msg.data)
 		        return;
 		    if (msg.data.method === "neb_sendTransaction"){
-                unapprovedTxs.push(msg.data)
-                console.log("unapprovedTxCount:" + unapprovedTxs.length);
-                updateBadgeText()
-                chrome.windows.create({'url': 'html/sendNas.html', 'type': 'popup', height: 1024, width:420}, function(window) {
-                });
+                cacheTx(msg.data);
             }
             else if (msg.data.method === "neb_call"){
                 rpc_call(msg.data.data,function (resp) {
@@ -131,7 +127,20 @@ chrome.runtime.onConnect.addListener(function(port) {
                 unapprovedTxs.pop();
                 updateBadgeText();
             }
-            else if (!!msg.data.Receipt){
+            else if (!!msg.data.txhash){
+                console.log("txhash: " + JSON.stringify(msg.data.txhash));
+                if(msg.serialNumber){
+                    forwardMsgToPage(msg.serialNumber,msg.data.txhash);
+                    return
+                }
+                chrome.tabs.query({}, function(tabs){       //send tx receipt back to web page
+                    for (var i=0; i<tabs.length; ++i) {
+                        chrome.tabs.sendMessage(tabs[i].id, {txhash: msg.data.txhash});
+                    }
+                });
+
+            }
+            else if (!!msg.data.receipt){
                 console.log("Receipt: " + JSON.stringify(msg.data.Receipt));
                 chrome.tabs.query({}, function(tabs){       //send tx receipt back to web page
                     for (var i=0; i<tabs.length; ++i) {
@@ -140,10 +149,40 @@ chrome.runtime.onConnect.addListener(function(port) {
                 });
 
             }
+            else if (!!msg.data.default) {
+                console.log("txhash: " + JSON.stringify(msg.data.default));
+                if (msg.serialNumber) {
+                    forwardMsgToPage(msg.serialNumber, msg.data.default);
+                }
+            }
 
         }
 	});
 });
+
+function forwardMsgToPage(serialNumber,resp) {
+    var senderInfo = messagesFromPage[serialNumber];
+    if(senderInfo){
+        chrome.tabs.sendMessage(senderInfo.sender.id,
+            {
+                "src" : "background",
+                "logo" : "nebulas",
+                "serialNumber" : serialNumber,
+                "resp" : resp
+            });
+
+        delete messagesFromPage[serialNumber];
+    }
+
+}
+//received a sendTransaction message
+function cacheTx(txData) {
+    unapprovedTxs.push(txData)
+    console.log("unapprovedTxCount:" + unapprovedTxs.length);
+    updateBadgeText()
+    chrome.windows.create({'url': 'html/sendNas.html', 'type': 'popup', height: 1024, width:420}, function(window) {
+    });
+}
 
 function updateBadgeText(){
     if(unapprovedTxs.length === 0)
@@ -191,3 +230,65 @@ function UnlockFile( fileJson, password) {
 
     }
 }
+
+var messagesFromPage = {};
+
+//listen msg from contentscript (nebpay -> contentscript -> background)
+chrome.runtime.onMessage.addListener(
+    function(request, sender, sendResponse) {
+        console.log(sender.tab ?
+            "from a content script:" + JSON.stringify(sender.tab) :
+            "from the extension");
+
+        console.log("request: " + JSON.stringify(request));
+
+        if(request.logo === "nebulas") {
+            messagesFromPage[request.params.serialNumber] = {sender: sender.tab, params: request.params};
+
+            var type = request.params.pay.payload.type;
+            if (type === "simulateCall"){       //
+                var data = {
+                    "to":request.params.pay.to,
+                    "value":request.params.pay.value,
+                    "contract":{
+                        "function":request.params.pay.payload.function,
+                        "args":request.params.pay.payload.args
+                    }
+                }
+                rpc_call(data,function (resp) {
+                    forwardMsgToPage(request.params.serialNumber,resp)
+                    // sendResponse({
+                    //     "src": "background",
+                    //     "logo": "nebulas",
+                    //     "serialNumber": request.params.serialNumber,
+                    //     "resp": resp
+                    // })
+                })
+            }else if (type === "binary" ||
+                type === "deploy" ||
+                type === "call" ){
+                var txData = {
+                    "to":request.params.pay.to,
+                    "value":request.params.pay.value,
+                    "serialNumber":request.params.serialNumber
+                };
+                if(type === "deploy")
+                    txData.contract ={
+                        "source":request.params.pay.payload.source,
+                        "sourceType":request.params.pay.payload.sourceType,
+                        "args":request.params.pay.payload.args
+                    };
+                if(type === "call")
+                    txData.contract = {
+                        "function":request.params.pay.payload.function,
+                        "args":request.params.pay.payload.args
+                    };
+                cacheTx({data:txData});
+            }else {
+                sendResponse({
+                    "serialNumber": request.params.serialNumber, "resp": "undefined interface"
+                })
+            }
+        }
+
+    });

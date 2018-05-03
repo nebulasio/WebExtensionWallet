@@ -64,20 +64,26 @@
 
 <script>
 
-    document.addEventListener("DOMContentLoaded", function() {
-        console.log("web page loaded...")
-        setTimeout(checkNebpay,100);
+    // document.addEventListener("DOMContentLoaded", function() {
+    //     console.log("web page loaded...")
+    //     setTimeout(checkNebpay,100);
+    //
+    // });
+    //
+    // var NebPay;
+    // function checkNebpay() {
+    //     console.log("check nebpay")
+    //     try{
+    //         NebPay = require("nebpay");
+    //     }catch(e){
+    //         alert ("Extension wallet is not installed, please install it first.")
+    //     }
+    // }
 
-    });
-
-    var NebPay;
-    function checkNebpay() {
-        console.log("check nebpay")
-        try{
-            NebPay = require("nebpay");
-        }catch(e){
-            alert ("Extension wallet is not installed, please install it first.")
-        }
+    //check if webExtensionWallet is installed,
+    //var "webExtensionWallet" will be injected into webpage if webExtensionWallet is installed
+    if(typeof(webExtensionWallet) === "undefined"){
+        alert ("Extension wallet is not installed, please install it first.")
     }
 
     document.getElementById("buttonGetACC").addEventListener("click",function(){
@@ -154,6 +160,9 @@
         console.log("recived by page:" + e + ", e.data:"+ JSON.stringify(e.data));
         if(!!e.data.data.account){
             document.getElementById("accountAddress").innerHTML= "Account address: " + e.data.data.account;
+        }
+        if(!!e.data.data.txhash){
+            document.getElementById("txResult").innerHTML = "Transaction hash\n" +  JSON.stringify(e.data.data.txhash,null,'\t');
         }
         if(!!e.data.data.receipt){
             document.getElementById("txResult").innerHTML = "Transaction Receipt\n" +  JSON.stringify(e.data.data.receipt,null,'\t');
