@@ -2,7 +2,7 @@
     //manifest spec: http://developer.chrome.com/extensions/manifest.html
     //required
     "name": "extensionWallet",
-    "version": "1.0",
+    "version": "0.1.0",
     "manifest_version": 2,
 
     //recommended

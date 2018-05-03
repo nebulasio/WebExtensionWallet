@@ -144,7 +144,7 @@ var uiBlock = function () {
             apiList = [
                 { chainId: 1, name: "Mainnet", url: "https://mainnet.nebulas.io" },
                 { chainId: 1001, name: "Testnet", url: "https://testnet.nebulas.io" },
-                { chainId: 1, name: "localhost:8685", url: "http://127.0.0.1:8685" }
+                { chainId: 100, name: "localhost:8685", url: "http://127.0.0.1:8685" }
             ];
             apiPrefix = (localSave.getItem("apiPrefix") || "").toLowerCase();
             sApiButtons = "";
@@ -153,7 +153,6 @@ var uiBlock = function () {
 
             i == len && (i = 0);
             localSave.setItem("apiPrefix", apiPrefix = apiList[i].url);
-            //changeNetwork(apiList[i].url)
             localSave.setItem("chainId", apiList[i].chainId);
             sApiText = apiList[i].name;
 
@@ -208,7 +207,6 @@ var uiBlock = function () {
                 if (!$this.hasClass("active")) {
                     localSave.setItem("apiPrefix", apiList[$this.data("i")].url);
                     location.reload();
-                    //changeNetwork(apiList[$this.data("i")].url);
                 }
             }
 

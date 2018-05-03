@@ -16,9 +16,12 @@ var gAccount;
 var network ,chainId;
 
 function resetNeb() {
-    network = (localSave.getItem("network") || "").toLowerCase();
+    //network = (localSave.getItem("network") || "").toLowerCase();
+    //chainId = localSave.getItem("chainId" ) || 1001
+    network = localSave.getItem("apiPrefix") || "https://testnet.nebulas.io"
     chainId = localSave.getItem("chainId" ) || 1001
-    neb.setRequest(new nebulas.HttpRequest(network || "https://testnet.nebulas.io/"));
+
+    neb.setRequest(new nebulas.HttpRequest(network));
 }
 
 
@@ -110,10 +113,10 @@ chrome.runtime.onConnect.addListener(function(port) {
             if (!!msg.data.AccAddress){
                 AccAddress = msg.data.AccAddress;
             }
-            else if(!!msg.data.network){
-                if(msg.data.network !== network){
-                    localSave.setItem("network", msg.data.network);
-                    localSave.setItem("chainId", msg.data.chainId);
+            else if(!!msg.data.changeNetwork){
+                if(msg.data.changeNetwork !== network){
+                    //localSave.setItem("network", msg.data.network);
+                    //localSave.setItem("chainId", msg.data.chainId);
                     //location.reload(true)
                     resetNeb();
                 }

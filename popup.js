@@ -59,16 +59,6 @@ function processTx(tx) {
 
 }
 
-/*
-chrome.runtime.onConnect.addListener(function(port) {
-    console.log("Connected ....." + port.name);
-    port.onMessage.addListener(function(msg) {
-        console.log("msg listened: " + JSON.stringify(msg));
-    })
-
-})
-*/
-
 //load stored keyfle info from chrome.storage.local
 document.addEventListener("DOMContentLoaded", function() {
     console.log("popout page loaded...")
@@ -101,12 +91,9 @@ function changeNetwork() {
     //     data: {
     //         network : url,
     //         chainId : chainId
-    //     }
+    //     })
     // });
-    messageToBackground("data",{
-        "network" : url,
-        "chainId" : chainId
-    })
+    messageToBackground("changeNetwork",url)
 }
 
 function restoreAccount() {
