@@ -25,36 +25,24 @@
 
 ### 3. Instructions on how to use WebExtensionApp in your webapp
 
-When developing your Dapp page, you can use `postMessage` API to communicate with ExtensionWallet, and use `window.addEventListener` to listen the message answer. Just as the example below.
+When developing your Dapp page, you can use [NebPay SDK](https://github.com/nebulasio/nebPay) to communicate with ExtensionWallet. Just as the example below.
 
-To send a transaction with extensionWallet, you should use `postMessage` to send a message as below:
+To call a SmartContract through extensionWallet, you should use [`nebpay.call`](https://github.com/nebulasio/nebPay/blob/master/doc/NebPay_Introduction.md#call) or [`nebpay.simulateCall`](https://github.com/nebulasio/nebPay/blob/master/doc/NebPay_Introduction.md#simulatecall) to send a transaction as below:
 ```js
-window.postMessage({
-        "target": "contentscript",
-        "data":{
-            "to": to,
-            "value": amount
-        },
-        "method": "neb_sendTransaction",
-    }, "*");
-```
-To call a smart contract function with extensionWallet, you should use `postMessage` to send a message as below:
-```js
-window.postMessage({
-    "target": "contentscript",
-    "data":{
-        "to": to,
-        "value": "0",
-        "contract":{  //"contract" is a parameter used to deploy a contract or call a smart contract function
-            "function":func,
-            "args":para
-        }
+nebPay.call(to, value, callFunction, callArgs, {
+    qrcode: {
+        showQRCode: true
     },
-    "method": "neb_sendTransaction",
-}, "*");
-```
-These two example above is similar with [Nebulas rpc](https://github.com/nebulasio/wiki/blob/master/rpc_admin.md#sendtransaction) interface, we will add all the rpc interfaces to ExtensionWallet.
+    listener: cbCallDapp //specify a listener to handle the transaction result
+});
 
-And you can use test/TestPage.html to take a test.
+function cbCallDapp(resp){
+        console.log("response: " + JSON.stringify(resp))
+    }
+    
+```
+
+
+And you can use `test/TestPage.html` to take a test.
 
 
