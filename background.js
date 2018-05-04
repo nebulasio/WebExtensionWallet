@@ -1,6 +1,3 @@
-// Copyright 2018 The Chromium Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
 
 'use strict';
 
@@ -26,37 +23,31 @@ function resetNeb() {
 
 
 function rpc_call(data, cb) {
-    getAccountStat(AccAddress,function (accStat) {
-        neb.api.call({
-            from: AccAddress,
-            to: data.to,
-            value: data.value,
-            nonce: parseInt(accStat.nonce) + 1,
-            gasPrice: "1000000",
-            gasLimit: "200000",
-            contract: data.contract
+    if (!AccAddress) {
+        alert("please import your wallet file into extension")
+        cb("error: please import wallet file")
+        return
+    }
+    neb.api.getAccountState(AccAddress)
+        .then(function (accStat) {
+            //var balance = nebulas.Unit.fromBasic(accStat.balance, "nas"),
+            //var nonce = parseInt(accStat.nonce) + 1;
+            return neb.api.call({
+                from: AccAddress,
+                to: data.to,
+                value: data.value,
+                nonce: parseInt(accStat.nonce) + 1,
+                gasPrice: "1000000",
+                gasLimit: "200000",
+                contract: data.contract
+            })
         })
         .then(function (resp) {
             cb(resp)
         })
         .catch(function (err) {
             console.log("rpc call error: " + JSON.stringify(err))
-            cb(err)
-        });
-    })
-
-}
-
-function getAccountStat(acc, callback) {
-    // prepare nonce
-    neb.api.getAccountState(acc)
-        .then(function (resp) {
-            //var balance = nebulas.Unit.fromBasic(resp.balance, "nas"),
-            //var nonce = parseInt(resp.nonce) + 1;
-            callback(resp);
-        })
-        .catch(function (err) {
-            console.log("get account state error" + err.toString())
+            cb(err.message || err)
         });
 }
 
