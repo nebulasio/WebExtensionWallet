@@ -1,45 +1,24 @@
 require=(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 "use strict";
 
-var isChrome = function () {
-    if (typeof window !== "undefined") {
-        var userAgent = navigator.userAgent.toLowerCase();
-        if (userAgent.match(/chrome\/([\d\.]+)/)) {
-            return true;
-        }
-    }
-    return false;
-};
-
-var randomCode = function (len) {
-    var d,
-        e,
-        b = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
-        c = "";
-    for (d = 0; len > d; d += 1) {
-        e = Math.random() * b.length, e = Math.floor(e), c += b.charAt(e);
-    }
-    return c;
-};
+var payUrl = "http://18.221.150.42/api/pay";
 
 module.exports = {
-    isChrome: isChrome,
-    randomCode: randomCode
+    payUrl: payUrl
 };
 
 },{}],2:[function(require,module,exports){
 "use strict";
 
-var Utils = require("./Utils");
-
 var callbackMap = {};
 
 var openExtension = function (params) {
 
-    if (params.callback) {
-        callbackMap[params.serialNumber] = params.callback;
+    if (params.listener) {
+        callbackMap[params.serialNumber] = params.listener;
     }
     params.callback = undefined; //postMessage can't contains a function attr
+    params.listener = undefined; //postMessage can't contains a function attr
 
     window.postMessage({
         "src": "nebPay",
@@ -64,13 +43,62 @@ window.addEventListener('message', function (resp) {
 
 module.exports = openExtension;
 
-},{"./Utils":1}],3:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
+"use strict";
+
+var get = function (url, body) {
+    var obj = {
+        url: url,
+        method: "GET",
+        body: body
+    };
+    return request(obj);
+};
+
+var post = function (url, body) {
+    var obj = {
+        url: url,
+        method: "POST",
+        body: body
+    };
+    return request(obj);
+};
+
+var request = function (obj) {
+    return new Promise((resolve, reject) => {
+        let xhr = new XMLHttpRequest();
+        xhr.open(obj.method || "GET", obj.url);
+        if (obj.headers) {
+            Object.keys(obj.headers).forEach(key => {
+                xhr.setRequestHeader(key, obj.headers[key]);
+            });
+        }
+        xhr.onload = () => {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                resolve(xhr.response);
+            } else {
+                reject(xhr.statusText);
+            }
+        };
+        xhr.onerror = () => reject(xhr.statusText);
+        xhr.send(obj.body);
+    });
+};
+
+module.exports = {
+    get: get,
+    post: post,
+    request: request
+};
+
+},{}],4:[function(require,module,exports){
 "use strict";
 
 var BigNumber = require("bignumber.js");
 
-var Utils = require("./Utils");
+var Utils = require("./utils");
 var QRCode = require("./qrcode");
+var Config = require("./config");
 
 var openExtension = require("./extensionUtils.js");
 
@@ -84,7 +112,7 @@ Pay.prototype = {
 	submit: function (currency, to, value, payload, options) {
 		options.serialNumber = Utils.randomCode(32);
 		value = value || "0";
-		var amount = new BigNumber(value).times("1000000000000000000");
+		var amount = new BigNumber(value).times("1000000000000000000"); //10^18
 		var params = {
 			serialNumber: options.serialNumber,
 			goods: options.goods,
@@ -95,6 +123,7 @@ Pay.prototype = {
 				payload: payload
 			},
 			callback: options.callback,
+			listener: options.listener,
 			nrc20: options.nrc20
 		};
 
@@ -114,7 +143,7 @@ Pay.prototype = {
 
 function openApp(params, options) {
 	// if (typeof window !== "undefined") {
-	params.callback = "http://18.221.150.42/api/pay";
+	params.callback = Config.payUrl;
 	var appParams = {
 		category: "jump",
 		des: "confirmTransfer",
@@ -135,7 +164,7 @@ function showQRCode(params, options) {
 
 module.exports = Pay;
 
-},{"./Utils":1,"./extensionUtils.js":2,"./qrcode":4,"bignumber.js":5}],4:[function(require,module,exports){
+},{"./config":1,"./extensionUtils.js":2,"./qrcode":5,"./utils":6,"bignumber.js":7}],5:[function(require,module,exports){
 "use strict";
 
 var QRCode = require('qrcode');
@@ -216,7 +245,36 @@ module.exports = {
 	showQRCode: showQRCode
 };
 
-},{"qrcode":10}],5:[function(require,module,exports){
+},{"qrcode":12}],6:[function(require,module,exports){
+"use strict";
+
+var isChrome = function () {
+    if (typeof window !== "undefined") {
+        var userAgent = navigator.userAgent.toLowerCase();
+        if (userAgent.match(/chrome\/([\d\.]+)/)) {
+            return true;
+        }
+    }
+    return false;
+};
+
+var randomCode = function (len) {
+    var d,
+        e,
+        b = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+        c = "";
+    for (d = 0; len > d; d += 1) {
+        e = Math.random() * b.length, e = Math.floor(e), c += b.charAt(e);
+    }
+    return c;
+};
+
+module.exports = {
+    isChrome: isChrome,
+    randomCode: randomCode
+};
+
+},{}],7:[function(require,module,exports){
 /*! bignumber.js v5.0.0 https://github.com/MikeMcl/bignumber.js/LICENCE */
 
 ;(function (globalObj) {
@@ -2953,7 +3011,7 @@ module.exports = {
     }
 })(this);
 
-},{}],6:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 'use strict'
 
 var G = require('window-or-global')
@@ -2965,7 +3023,7 @@ module.exports = function() {
   )
 }
 
-},{"window-or-global":36}],7:[function(require,module,exports){
+},{"window-or-global":38}],9:[function(require,module,exports){
 'use strict';
 
 /******************************************************************************
@@ -3132,7 +3190,7 @@ if (typeof module !== 'undefined') {
   module.exports = dijkstra;
 }
 
-},{}],8:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 'use strict';
 
 var hasOwn = Object.prototype.hasOwnProperty;
@@ -3220,14 +3278,14 @@ module.exports = function extend() {
 	return target;
 };
 
-},{}],9:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 var toString = {}.toString;
 
 module.exports = Array.isArray || function (arr) {
   return toString.call(arr) == '[object Array]';
 };
 
-},{}],10:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 var canPromise = require('can-promise')
 var QRCode = require('./core/qrcode')
 var CanvasRenderer = require('./renderer/canvas')
@@ -3303,7 +3361,7 @@ exports.toString = renderCanvas.bind(null, function (data, _, opts) {
   return SvgRenderer.render(data, opts)
 })
 
-},{"./core/qrcode":26,"./renderer/canvas":32,"./renderer/svg-tag.js":33,"can-promise":6}],11:[function(require,module,exports){
+},{"./core/qrcode":28,"./renderer/canvas":34,"./renderer/svg-tag.js":35,"can-promise":8}],13:[function(require,module,exports){
 /**
  * Alignment pattern are fixed reference pattern in defined positions
  * in a matrix symbology, which enables the decode software to re-synchronise
@@ -3388,7 +3446,7 @@ exports.getPositions = function getPositions (version) {
   return coords
 }
 
-},{"./utils":30}],12:[function(require,module,exports){
+},{"./utils":32}],14:[function(require,module,exports){
 var Mode = require('./mode')
 
 /**
@@ -3449,7 +3507,7 @@ AlphanumericData.prototype.write = function write (bitBuffer) {
 
 module.exports = AlphanumericData
 
-},{"./mode":23}],13:[function(require,module,exports){
+},{"./mode":25}],15:[function(require,module,exports){
 function BitBuffer () {
   this.buffer = []
   this.length = 0
@@ -3488,7 +3546,7 @@ BitBuffer.prototype = {
 
 module.exports = BitBuffer
 
-},{}],14:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 var Buffer = require('../utils/buffer')
 
 /**
@@ -3559,7 +3617,7 @@ BitMatrix.prototype.isReserved = function (row, col) {
 
 module.exports = BitMatrix
 
-},{"../utils/buffer":35}],15:[function(require,module,exports){
+},{"../utils/buffer":37}],17:[function(require,module,exports){
 var Buffer = require('../utils/buffer')
 var Mode = require('./mode')
 
@@ -3588,7 +3646,7 @@ ByteData.prototype.write = function (bitBuffer) {
 
 module.exports = ByteData
 
-},{"../utils/buffer":35,"./mode":23}],16:[function(require,module,exports){
+},{"../utils/buffer":37,"./mode":25}],18:[function(require,module,exports){
 var ECLevel = require('./error-correction-level')
 
 var EC_BLOCKS_TABLE = [
@@ -3725,7 +3783,7 @@ exports.getTotalCodewordsCount = function getTotalCodewordsCount (version, error
   }
 }
 
-},{"./error-correction-level":17}],17:[function(require,module,exports){
+},{"./error-correction-level":19}],19:[function(require,module,exports){
 exports.L = { bit: 1 }
 exports.M = { bit: 0 }
 exports.Q = { bit: 3 }
@@ -3777,7 +3835,7 @@ exports.from = function from (value, defaultValue) {
   }
 }
 
-},{}],18:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 var getSymbolSize = require('./utils').getSymbolSize
 var FINDER_PATTERN_SIZE = 7
 
@@ -3801,7 +3859,7 @@ exports.getPositions = function getPositions (version) {
   ]
 }
 
-},{"./utils":30}],19:[function(require,module,exports){
+},{"./utils":32}],21:[function(require,module,exports){
 var Utils = require('./utils')
 
 var G15 = (1 << 10) | (1 << 8) | (1 << 5) | (1 << 4) | (1 << 2) | (1 << 1) | (1 << 0)
@@ -3832,7 +3890,7 @@ exports.getEncodedBits = function getEncodedBits (errorCorrectionLevel, mask) {
   return ((data << 10) | d) ^ G15_MASK
 }
 
-},{"./utils":30}],20:[function(require,module,exports){
+},{"./utils":32}],22:[function(require,module,exports){
 var Buffer = require('../utils/buffer')
 
 var EXP_TABLE = new Buffer(512)
@@ -3906,7 +3964,7 @@ exports.mul = function mul (x, y) {
   return EXP_TABLE[LOG_TABLE[x] + LOG_TABLE[y]]
 }
 
-},{"../utils/buffer":35}],21:[function(require,module,exports){
+},{"../utils/buffer":37}],23:[function(require,module,exports){
 var Mode = require('./mode')
 var Utils = require('./utils')
 
@@ -3962,7 +4020,7 @@ KanjiData.prototype.write = function (bitBuffer) {
 
 module.exports = KanjiData
 
-},{"./mode":23,"./utils":30}],22:[function(require,module,exports){
+},{"./mode":25,"./utils":32}],24:[function(require,module,exports){
 /**
  * Data mask pattern reference
  * @type {Object}
@@ -4198,7 +4256,7 @@ exports.getBestMask = function getBestMask (data, setupFormatFunc) {
   return bestPattern
 }
 
-},{}],23:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 var Version = require('./version')
 var Regex = require('./regex')
 
@@ -4367,7 +4425,7 @@ exports.from = function from (value, defaultValue) {
   }
 }
 
-},{"./regex":28,"./version":31}],24:[function(require,module,exports){
+},{"./regex":30,"./version":33}],26:[function(require,module,exports){
 var Mode = require('./mode')
 
 function NumericData (data) {
@@ -4412,7 +4470,7 @@ NumericData.prototype.write = function write (bitBuffer) {
 
 module.exports = NumericData
 
-},{"./mode":23}],25:[function(require,module,exports){
+},{"./mode":25}],27:[function(require,module,exports){
 var Buffer = require('../utils/buffer')
 var GF = require('./galois-field')
 
@@ -4478,7 +4536,7 @@ exports.generateECPolynomial = function generateECPolynomial (degree) {
   return poly
 }
 
-},{"../utils/buffer":35,"./galois-field":20}],26:[function(require,module,exports){
+},{"../utils/buffer":37,"./galois-field":22}],28:[function(require,module,exports){
 var Buffer = require('../utils/buffer')
 var Utils = require('./utils')
 var ECLevel = require('./error-correction-level')
@@ -4979,7 +5037,7 @@ exports.create = function create (data, options) {
   return createSymbol(data, version, errorCorrectionLevel, mask)
 }
 
-},{"../utils/buffer":35,"./alignment-pattern":11,"./bit-buffer":13,"./bit-matrix":14,"./error-correction-code":16,"./error-correction-level":17,"./finder-pattern":18,"./format-info":19,"./mask-pattern":22,"./mode":23,"./reed-solomon-encoder":27,"./segments":29,"./utils":30,"./version":31,"isarray":9}],27:[function(require,module,exports){
+},{"../utils/buffer":37,"./alignment-pattern":13,"./bit-buffer":15,"./bit-matrix":16,"./error-correction-code":18,"./error-correction-level":19,"./finder-pattern":20,"./format-info":21,"./mask-pattern":24,"./mode":25,"./reed-solomon-encoder":29,"./segments":31,"./utils":32,"./version":33,"isarray":11}],29:[function(require,module,exports){
 var Buffer = require('../utils/buffer')
 var Polynomial = require('./polynomial')
 
@@ -5040,7 +5098,7 @@ ReedSolomonEncoder.prototype.encode = function encode (data) {
 
 module.exports = ReedSolomonEncoder
 
-},{"../utils/buffer":35,"./polynomial":25}],28:[function(require,module,exports){
+},{"../utils/buffer":37,"./polynomial":27}],30:[function(require,module,exports){
 var numeric = '[0-9]+'
 var alphanumeric = '[A-Z $%*+\\-./:]+'
 var kanji = '(?:[u3000-u303F]|[u3040-u309F]|[u30A0-u30FF]|' +
@@ -5073,7 +5131,7 @@ exports.testAlphanumeric = function testAlphanumeric (str) {
   return TEST_ALPHANUMERIC.test(str)
 }
 
-},{}],29:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 var Mode = require('./mode')
 var NumericData = require('./numeric-data')
 var AlphanumericData = require('./alphanumeric-data')
@@ -5405,7 +5463,7 @@ exports.rawSplit = function rawSplit (data) {
   )
 }
 
-},{"./alphanumeric-data":12,"./byte-data":15,"./kanji-data":21,"./mode":23,"./numeric-data":24,"./regex":28,"./utils":30,"dijkstrajs":7}],30:[function(require,module,exports){
+},{"./alphanumeric-data":14,"./byte-data":17,"./kanji-data":23,"./mode":25,"./numeric-data":26,"./regex":30,"./utils":32,"dijkstrajs":9}],32:[function(require,module,exports){
 var toSJISFunction
 var CODEWORDS_COUNT = [
   0, // Not used
@@ -5470,7 +5528,7 @@ exports.toSJIS = function toSJIS (kanji) {
   return toSJISFunction(kanji)
 }
 
-},{}],31:[function(require,module,exports){
+},{}],33:[function(require,module,exports){
 var Utils = require('./utils')
 var ECCode = require('./error-correction-code')
 var ECLevel = require('./error-correction-level')
@@ -5645,7 +5703,7 @@ exports.getEncodedBits = function getEncodedBits (version) {
   return (version << 12) | d
 }
 
-},{"./error-correction-code":16,"./error-correction-level":17,"./mode":23,"./utils":30,"isarray":9}],32:[function(require,module,exports){
+},{"./error-correction-code":18,"./error-correction-level":19,"./mode":25,"./utils":32,"isarray":11}],34:[function(require,module,exports){
 var Utils = require('./utils')
 
 function clearCanvas (ctx, canvas, size) {
@@ -5710,7 +5768,7 @@ exports.renderToDataURL = function renderToDataURL (qrData, canvas, options) {
   return canvasEl.toDataURL(type, rendererOpts.quality)
 }
 
-},{"./utils":34}],33:[function(require,module,exports){
+},{"./utils":36}],35:[function(require,module,exports){
 var Utils = require('./utils')
 
 function getColorAttrib (color, attrib) {
@@ -5793,7 +5851,7 @@ exports.render = function render (qrData, options, cb) {
   return svgTag
 }
 
-},{"./utils":34}],34:[function(require,module,exports){
+},{"./utils":36}],36:[function(require,module,exports){
 function hex2rgba (hex) {
   if (typeof hex !== 'string') {
     throw new Error('Color should be defined as hex string')
@@ -5888,7 +5946,7 @@ exports.qrToImageData = function qrToImageData (imgData, qr, opts) {
   }
 }
 
-},{}],35:[function(require,module,exports){
+},{}],37:[function(require,module,exports){
 /**
  * Implementation of a subset of node.js Buffer methods for the browser.
  * Based on https://github.com/feross/buffer
@@ -6402,7 +6460,7 @@ Buffer.isBuffer = function isBuffer (b) {
 
 module.exports = Buffer
 
-},{"isarray":9}],36:[function(require,module,exports){
+},{"isarray":11}],38:[function(require,module,exports){
 (function (global){
 'use strict'
 module.exports = (typeof self === 'object' && self.self === self && self) ||
@@ -6414,6 +6472,8 @@ module.exports = (typeof self === 'object' && self.self === self && self) ||
 "use strict";
 
 var extend = require('extend');
+var http = require("./libs/http");
+var config = require("./libs/config");
 var Pay = require("./libs/pay");
 
 var BigNumber = require("bignumber.js");
@@ -6437,7 +6497,9 @@ var defaultOptions = {
 	},
 	// callback is the return url/func after payment
 	callback: undefined,
-	// if use nrc20pay ,should input nrc20 params like name, symbol, decimals
+	//listener：specify a listener function to handle payment feedback message(only valid for browser extension)
+	listener: undefined,
+	// if use nrc20pay ,should input nrc20 params like address, name, symbol, decimals
 	nrc20: undefined
 };
 
@@ -6447,13 +6509,18 @@ NebPay.prototype = {
 			type: "binary"
 		};
 		options = extend(defaultOptions, options);
-		this._pay.submit(NAS, to, value, payload, options);
+		return this._pay.submit(NAS, to, value, payload, options);
 	},
 	nrc20pay: function (currency, to, value, options) {
 		if (options.nrc20 && options.nrc20.decimals > 0) {
 			value = value || "0";
 			value = new BigNumber(value).times(new BigNumber(10).pow(options.nrc20.decimals)).toString(10);
 		}
+		var address = "";
+		if (options.nrc20 && options.nrc20.address) {
+			address = options.nrc20.address;
+		}
+
 		var args = [to, value];
 		var payload = {
 			type: "call",
@@ -6461,7 +6528,7 @@ NebPay.prototype = {
 			args: JSON.stringify(args)
 		};
 		options = extend(defaultOptions, options);
-		this._pay.submit(currency, "", "0", payload, options);
+		return this._pay.submit(currency, address, "0", payload, options);
 	},
 	deploy: function (source, sourceType, args, options) {
 		var payload = {
@@ -6471,7 +6538,7 @@ NebPay.prototype = {
 			args: args
 		};
 		options = extend(defaultOptions, options);
-		this._pay.submit(NAS, "", "0", payload, options);
+		return this._pay.submit(NAS, "", "0", payload, options);
 	},
 	call: function (to, value, func, args, options) {
 		var payload = {
@@ -6480,7 +6547,7 @@ NebPay.prototype = {
 			args: args
 		};
 		options = extend(defaultOptions, options);
-		this._pay.submit(NAS, to, value, payload, options);
+		return this._pay.submit(NAS, to, value, payload, options);
 	},
 	simulateCall: function (to, value, func, args, options) {
 		var payload = {
@@ -6489,10 +6556,14 @@ NebPay.prototype = {
 			args: args
 		};
 		options = extend(defaultOptions, options);
-		this._pay.submit(NAS, to, value, payload, options);
+		return this._pay.submit(NAS, to, value, payload, options);
+	},
+	queryPayInfo: function (serialNumber) {
+		var url = config.payUrl + "/query?payId=" + serialNumber;
+		return http.get(url);
 	}
 };
 
 module.exports = NebPay;
 
-},{"./libs/pay":3,"bignumber.js":5,"extend":8}]},{},[]);
+},{"./libs/config":1,"./libs/http":3,"./libs/pay":4,"bignumber.js":7,"extend":10}]},{},[]);

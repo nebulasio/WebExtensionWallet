@@ -35,7 +35,8 @@
                 name: "test",
                 desc: "test goods"
             },
-            callback: cbSendTx
+            //callback: cbSendTx
+            listener: cbSendTx
         });
     }
     //callback function of onClickSendTx, to handle the transaction response
@@ -57,7 +58,8 @@
                 name: "test",
                 desc: "test goods"
             },
-            callback: cbCallDapp
+            //callback: cbCallDapp
+            listener: cbCallDapp
         });
     }
 
@@ -79,7 +81,7 @@
                 name: "test",
                 desc: "test goods"
             },
-            callback: cbSimulateCall
+            listener: cbSimulateCall
         });
     }
 
