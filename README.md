@@ -25,7 +25,41 @@
 
 ### 3. Instructions on how to use WebExtensionApp in your webapp
 
-When developing your Dapp page, you can use [NebPay SDK](https://github.com/nebulasio/nebPay) to communicate with ExtensionWallet. Just as the example below.
+Now WebExtensionApp supports two different ways to communicate with Dapp page.
+
+#### 3.1 Using `postMessage`
+
+When developing your Dapp page, you can use `postMessage` API to communicate with ExtensionWallet, and use `window.addEventListener` to listen the message answer. Just as the example below.
+
+To call a smart contract function with extensionWallet, you should use `postMessage` to send a message as below:
+```js
+window.postMessage({
+    "target": "contentscript",
+    "data":{
+        "to": to,
+        "value": "0",
+        "contract":{  //"contract" is a parameter used to deploy a contract or call a smart contract function
+            "function":func,
+            "args":para
+        }
+    },
+    "method": "neb_sendTransaction",
+}, "*");
+```
+
+And then you need to add an `eventlistener` to listen the returned message.
+```js
+window.addEventListener('message', function(e) {
+     console.log("message received, msg.data: " + JSON.stringify(e.data));
+     if(!!e.data.data.txhash){
+         console.log( "Transaction hash:\n" +  JSON.stringify(e.data.data.txhash,null,'\t'));
+     }
+})
+```
+
+#### 3.2 Using NebPay SDK
+ 
+When developing your Dapp page, you can also use [NebPay SDK](https://github.com/nebulasio/nebPay) to communicate with ExtensionWallet. Just as the example below.
 
 To call a SmartContract through extensionWallet, you should use [`nebpay.call`](https://github.com/nebulasio/nebPay/blob/master/doc/NebPay_Introduction.md#call) or [`nebpay.simulateCall`](https://github.com/nebulasio/nebPay/blob/master/doc/NebPay_Introduction.md#simulatecall) to send a transaction as below:
 ```js
@@ -42,7 +76,7 @@ function cbCallDapp(resp){
     
 ```
 
-
-And you can use `test/TestPage.html` to take a test.
+### example page
+And you can use `example/TestPage.html` to take a test.
 
 
