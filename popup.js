@@ -1,3 +1,4 @@
+'use strict';
 
 //this port communicate with background
 var port = chrome.runtime.connect({name: "popup"});
@@ -22,12 +23,13 @@ port.onDisconnect.addListener(function(message) {
     console.log("Port disconnected: " + JSON.stringify(message))
 });
 
+//post message to background
 function messageToBackground(name,msg) {
     var data = {}
     data[name] = msg
     port.postMessage({
         src: "popup",dst:"background",
-        serialNumber: serialNumber || "",
+        serialNumber: txTobeProcessed.serialNumber || "",
         data : data
         // data: {
         //     name : msg
@@ -35,8 +37,8 @@ function messageToBackground(name,msg) {
     });
 }
 
-var txTobeProcessed
-var serialNumber
+var txTobeProcessed = ""
+//var serialNumber
 
 function processTx(tx) {
     txTobeProcessed = tx
@@ -47,7 +49,7 @@ function processTx(tx) {
     if(tx.serialNumber)             //value send by nebPay is using unit of Wei
         $("#amount").val(Unit.fromBasic(tx.value, "nas"));
 
-    serialNumber = tx.serialNumber || "";
+    //serialNumber = tx.serialNumber || "";
     if(!!tx.contract){
         $("#contract_div").css("display","unset");
         $("#contract").val(JSON.stringify(tx.contract))
@@ -71,31 +73,21 @@ var AccAddress ;
 
 function getNextTx() {
     console.log("to get next unapprovedTxs")
-    // port.postMessage({
-    //     src: "popup",
-    //     dst:"background",
-    //     data: {
-    //         getNextTx : 'true'
-    //     }
-    // });
+
     messageToBackground("getNextTx","true")
 
 }
+
+//tell background to check if the network is changed
 function changeNetwork() {
     var url = localSave.getItem("apiPrefix")
-    var chainId = localSave.getItem("chainId")
+    //var chainId = localSave.getItem("chainId")
     console.log("to change network")
-    // port.postMessage({
-    //     src: "popup",
-    //     dst:"background",
-    //     data: {
-    //         network : url,
-    //         chainId : chainId
-    //     })
-    // });
+
     messageToBackground("changeNetwork",url)
 }
 
+//
 function restoreAccount() {
 
     chrome.storage.local.get(['keyInfo'], function(result) {
@@ -106,9 +98,9 @@ function restoreAccount() {
             $(".container select-wallet-file").addClass("active1")
             console.log("unlockFile:")
             UnlockFile(result.fileJson, result.password)
+            hideKeyFileInput()
             getNextTx()
         }
-
 
     });
 }

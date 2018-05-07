@@ -1,7 +1,7 @@
 require=(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 "use strict";
 
-var payUrl = "http://18.221.150.42/api/pay";
+var payUrl = "https://pay.nebulas.io/api/pay";
 
 module.exports = {
     payUrl: payUrl
@@ -17,7 +17,7 @@ var openExtension = function (params) {
     if (params.listener) {
         callbackMap[params.serialNumber] = params.listener;
     }
-    params.callback = undefined; //postMessage can't contains a function attr
+    //params.callback = undefined;     //postMessage can't contains a function attr
     params.listener = undefined; //postMessage can't contains a function attr
 
     window.postMessage({
@@ -143,7 +143,7 @@ Pay.prototype = {
 
 function openApp(params, options) {
 	// if (typeof window !== "undefined") {
-	params.callback = Config.payUrl;
+	//params.callback = Config.payUrl;
 	var appParams = {
 		category: "jump",
 		des: "confirmTransfer",
@@ -6495,8 +6495,8 @@ var defaultOptions = {
 		showQRCode: false,
 		container: undefined
 	},
-	// callback is the return url/func after payment
-	callback: undefined,
+	// callback is the return url after payment
+	callback: config.payUrl,
 	//listener：specify a listener function to handle payment feedback message(only valid for browser extension)
 	listener: undefined,
 	// if use nrc20pay ,should input nrc20 params like address, name, symbol, decimals

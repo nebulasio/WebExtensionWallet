@@ -15,6 +15,7 @@ $("#generate").on("click", onClickGenerate);
 $("#reject").on("click", onClickReject);
 $("#modal-confirm .s").on("click", onClickModalConfirmS);
 $("#send_transaction").on("click", onClickSendTransaction);
+$("#change-wallet").on("click", onClickChangeWallet);
 
 uiBlock.insert({
     footer: ".footer",
@@ -25,6 +26,15 @@ uiBlock.insert({
     selectWalletFile: [".select-wallet-file", onUnlockFile]
 });
 
+function hideKeyFileInput(){
+    $(".select-wallet-file").hide()
+    $(".change_wallet").show()
+}
+
+function onClickChangeWallet(){
+    $(".select-wallet-file").show()
+    $(".change_wallet").hide()
+}
 
 function onUnlockFile(swf, fileJson, account, password) {
 
@@ -85,13 +95,7 @@ function onUnlockFile(swf, fileJson, account, password) {
 }
 
 function onClickReject() {
-    // port.postMessage({
-    //     src: "popup",dst:"background",
-    //     data: {
-    //         reject : "true"
-    //     }
-    //
-    // })
+
     messageToBackground("reject","true")
 
     messageToBackground("default","Error: Transaction rejected by user")
@@ -102,12 +106,6 @@ function onClickReject() {
 
 function onClickGenerate() {
 
-    // port.postMessage({
-    //     src: "popup",dst:"background",
-    //     data: {
-    //         generate : "true"
-    //     }
-    // })
     messageToBackground("generate","true")
 
     var fromAddress, toAddress, balance, amount, gaslimit, gasprice, nonce, bnAmount;
@@ -182,6 +180,56 @@ function onClickSendTransaction() {
     $("#value").val($("#amount").val()).trigger("input");
 }
 
+var request = function(obj) {
+    return new Promise((resolve, reject) => {
+        let xhr = new XMLHttpRequest();
+        xhr.open(obj.method || "GET", obj.url);
+        if (obj.headers) {
+            Object.keys(obj.headers).forEach(key => {
+                xhr.setRequestHeader(key, obj.headers[key]);
+            });
+        }
+        xhr.onload = () => {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                resolve(xhr.response);
+            } else {
+                reject(xhr.statusText);
+            }
+        };
+        xhr.onerror = () => reject(xhr.statusText);
+        xhr.send(obj.body);
+    });
+};
+
+
+function psotTxhashToServer(txTobeProcessed, mTxHash){
+
+    if(!txTobeProcessed.callback){
+        console.log("this tx has no \"callback\"")
+        return
+    }
+    var url = txTobeProcessed.callback;
+    var payId = txTobeProcessed.serialNumber;
+    var txHash= mTxHash;
+
+    url = `${url}?payId=${payId}&txHash=${txHash}`;
+
+    var obj = {
+        url: url,
+        method: "POST",
+        body: {}
+    };
+
+    request(obj).then(function (resp) {
+        console.log("psotTxhashToServer result:" + JSON.stringify(resp))
+    }).catch(function (err) {
+        console.log("psotTxhashToServer error:" + JSON.stringify(err))
+    })
+    //     .then(function () {
+    //     window.location.href = "check.html?" + mTxHash;
+    // })
+}
+
 function onClickModalConfirmS() {
     var mTxHash;
 
@@ -192,16 +240,14 @@ function onClickModalConfirmS() {
 
             console.log("txHash got...")  //send txhash msg to background.js
 
-            // port.postMessage({
-            //     src: "popup",dst:"background",
-            //     serialNumber: serialNumber || "",
-            //     data: {
-            //         txhash : resp
-            //     }
-            // });
             messageToBackground("txhash",resp)
 
-            window.location.href = "check.html?" + mTxHash;
+            psotTxhashToServer(txTobeProcessed, mTxHash);
+
+            //window.location.href = "check.html?" + mTxHash;
+            setTimeout(() => {
+                window.location.href = "check.html?" + mTxHash;
+            }, 1000)
 
             return neb.api.getTransactionReceipt(mTxHash);
         }).then(function (resp) {
@@ -210,13 +256,7 @@ function onClickModalConfirmS() {
             $("#receipt_div").show();
 
             console.log("txReceipt got...")  //send txhash msg to background.js
-            // port.postMessage({
-            //     src: "popup",dst:"background",
-            //     serialNumber: serialNumber || "",
-            //     data: {
-            //         receipt : resp
-            //     }
-            // });
+
             messageToBackground("receipt",resp)
 
             // TODO 重新点击需要reset页面状态，清理setTimeout

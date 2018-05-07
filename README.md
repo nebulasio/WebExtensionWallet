@@ -58,6 +58,8 @@ window.addEventListener('message', function(e) {
 ```
 
 #### 3.2 Using NebPay SDK
+
+Please refer to Dapp Example [SuperDictionary](https://github.com/15010159959/super-dictionary) to learn how to use this extension.
  
 When developing your Dapp page, you can also use [NebPay SDK](https://github.com/nebulasio/nebPay) to communicate with ExtensionWallet. Just as the example below.
 

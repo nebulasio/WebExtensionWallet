@@ -264,7 +264,8 @@ chrome.runtime.onMessage.addListener(
                 var txData = {
                     "to":request.params.pay.to,
                     "value":request.params.pay.value,
-                    "serialNumber":request.params.serialNumber
+                    "serialNumber":request.params.serialNumber,
+                    "callback":request.params.callback
                 };
                 if(type === "deploy")
                     txData.contract ={
