@@ -146,10 +146,18 @@ function onClickGenerate() {
             $("#raw").val(gTx.toString());
             $("#signed").val(gTx.toProtoString());
 
-            $("<div id=addressqr></div>")
-                .qrcode(gTx.toProtoString())
-                .replaceAll('#addressqr');
-
+            // //if the length of gTx is to large, then qrcode() will throw an error
+            // //then the qrcode will be the error message,
+            // try {
+            //     $("<div id=addressqr></div>")
+            //         .qrcode(gTx.toProtoString())
+            //         .replaceAll('#addressqr');
+            // }catch (e) {
+            //     console.log(e);
+            //     $("<div id=addressqr></div>")
+            //         .qrcode(e)
+            //         .replaceAll('#addressqr');
+            // }
             //$("#transaction").show();
 
             gLastGenerateInfo.fromAddress = fromAddress;
