@@ -44,10 +44,10 @@ function processTx(tx) {
     txTobeProcessed = tx
     console.log("to address: " + tx.to + ", mount: " + tx.value)
     $(".icon-address.to input").val(tx.to);
-    $("#amount").val(tx.value);
+    $("#amount").val(tx.value).trigger("input");
 
     if(tx.serialNumber)             //value send by nebPay is using unit of Wei
-        $("#amount").val(Unit.fromBasic(tx.value, "nas"));
+        $("#amount").val(Unit.fromBasic(tx.value, "nas")).trigger("input");
 
     //serialNumber = tx.serialNumber || "";
     if(!!tx.contract){
