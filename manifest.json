@@ -1,11 +1,8 @@
 {
-    //manifest spec: http://developer.chrome.com/extensions/manifest.html
-    //required
-    "name": "extensionWallet",
+    "name": "WebExtensionWallet",
     "version": "0.1.0",
     "manifest_version": 2,
 
-    //recommended
     "description": "Chrome extension description written here.",
     "icons": {
         "19": "images/icon_19.png",
@@ -19,14 +16,13 @@
       "persistent": false
     },
 
-    //required
     "browser_action": {
         "default_title": "Nebulas",
         "default_icon": {
             "19": "images/icon_19.png",
             "38": "images/icon_38.png"
         },
-//        "default_popup": "html/main.html"
+
         "default_popup": "html/sendNas.html"
     },
 
@@ -38,10 +34,8 @@
    } ],
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
 
-  "manifest_version": 2,
   "web_accessible_resources": ["inpage.js"],
 
-    //additional
     "options_page": "html/options.html",
     "homepage_url": "http://yourdomainhere.com/"
 }

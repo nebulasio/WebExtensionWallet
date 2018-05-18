@@ -117,6 +117,10 @@ chrome.runtime.onConnect.addListener(function(port) {
                     unapprovedTxs : unapprovedTxs
                 })
             }
+            else if (!!msg.data.rejectAll){
+                unapprovedTxs.splice(0,unapprovedTxs.length);
+                updateBadgeText();
+            }
             else if (!!msg.data.generate || !!msg.data.reject){
                 unapprovedTxs.pop();
                 updateBadgeText();
@@ -154,6 +158,7 @@ chrome.runtime.onConnect.addListener(function(port) {
 	});
 });
 
+//forward msg from popup-page to Dapp-page(Page ID has been recorded)
 function forwardMsgToPage(serialNumber,resp) {
     var senderInfo = messagesFromPage[serialNumber];
     if(senderInfo){
@@ -225,6 +230,7 @@ function UnlockFile( fileJson, password) {
     }
 }
 
+//use Object messagesFromPage as map,
 var messagesFromPage = {};
 
 //listen msg from contentscript (nebpay -> contentscript -> background)

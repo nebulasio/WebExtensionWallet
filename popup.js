@@ -6,18 +6,20 @@ port.postMessage({src: "popup",dst:"background"});
 port.onMessage.addListener(function(msg) {
     console.log("msg listened: " +JSON.stringify(msg));
     if (!! msg.unapprovedTxs) {
-        var length = msg.unapprovedTxs.length
-        if(msg.unapprovedTxs.length > 0) {
-            var tx = msg.unapprovedTxs[length - 1].data
-            processTx(tx);
-        }else{
-            console.log("no more unapprovedTxs")
-            $(".icon-address.to input").val('');
-            $("#amount").val('');
-        }
+        processTx(msg.unapprovedTxs);
+        // var length = msg.unapprovedTxs.length
+        // if(msg.unapprovedTxs.length > 0) {
+        //     var tx = msg.unapprovedTxs[length - 1].data
+        //     processTx(tx);
+        // }else{
+        //     console.log("no more unapprovedTxs")
+        //     $(".icon-address.to input").val('');
+        //     $("#amount").val('');
+        // }
 
     }
 });
+
 //just for debug, listen to port disconnect event
 port.onDisconnect.addListener(function(message) {
     console.log("Port disconnected: " + JSON.stringify(message))
@@ -40,23 +42,40 @@ function messageToBackground(name,msg) {
 var txTobeProcessed = ""
 //var serialNumber
 
-function processTx(tx) {
-    txTobeProcessed = tx
-    console.log("to address: " + tx.to + ", mount: " + tx.value)
-    $(".icon-address.to input").val(tx.to);
-    $("#amount").val(tx.value).trigger("input");
+function processTx(unapprovedTxs) {
+    var length = unapprovedTxs.length;
+    if(length > 0) {
+        var tx = unapprovedTxs[length - 1].data;
+        txTobeProcessed = tx
 
-    if(tx.serialNumber)             //value send by nebPay is using unit of Wei
-        $("#amount").val(Unit.fromBasic(tx.value, "nas")).trigger("input");
+        console.log("to address: " + tx.to + ", mount: " + tx.value)
+        $(".icon-address.to input").val(tx.to).trigger("input");
+        $("#amount").val(tx.value).trigger("input");
 
-    //serialNumber = tx.serialNumber || "";
-    if(!!tx.contract){
-        $("#contract_div").css("display","unset");
-        $("#contract").val(JSON.stringify(tx.contract))
-    }
-    else{
-        $("#contract_div").css("display","none");
-        $("#contract").val("")
+        if (length > 1)
+            $("#rejectAll").show();
+
+        if (tx.serialNumber)             //value send by nebPay is using unit of Wei
+            $("#amount").val(Unit.fromBasic(tx.value, "nas")).trigger("input");
+
+        //serialNumber = tx.serialNumber || "";
+        if (!!tx.contract) {
+            //$("#contract_div").css("display", "unset");
+            $("#contract_div").show();
+            $("#contract").val(JSON.stringify(tx.contract))
+        }
+        else {
+            //$("#contract_div").css("display", "none");
+            $("#contract_div").hide();
+            $("#contract").val("")
+        }
+    } else {
+        console.log("no more unapprovedTxs")
+        $(".icon-address.to input").val('').trigger("input");
+        $("#amount").val('').trigger("input");
+        $("#contract_div").hide();
+        $("#rejectAll").hide();
+
     }
 
 }

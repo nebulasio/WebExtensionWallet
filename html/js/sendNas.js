@@ -13,6 +13,7 @@ var nebulas = require("nebulas"),
 neb.setRequest(new nebulas.HttpRequest(localSave.getItem("apiPrefix") || "https://testnet.nebulas.io/"));
 $("#generate").on("click", onClickGenerate);
 $("#reject").on("click", onClickReject);
+$("#rejectAll").on("click", onClickRejectAll);
 $("#modal-confirm .s").on("click", onClickModalConfirmS);
 $("#send_transaction").on("click", onClickSendTransaction);
 $("#change-wallet").on("click", onClickChangeWallet);
@@ -103,6 +104,12 @@ function onClickReject() {
     window.close()
 }
 
+function onClickRejectAll() {
+
+    messageToBackground("rejectAll","true")
+    getNextTx()     //to refresh data
+    //window.close()
+}
 
 function onClickGenerate() {
 
@@ -210,7 +217,7 @@ var request = function(obj) {
 };
 
 
-function psotTxhashToServer(txTobeProcessed, mTxHash){
+function postTxhashToServer(txTobeProcessed, mTxHash){
 
     if(!txTobeProcessed.callback){
         console.log("this tx has no \"callback\"")
@@ -229,9 +236,9 @@ function psotTxhashToServer(txTobeProcessed, mTxHash){
     };
 
     request(obj).then(function (resp) {
-        console.log("psotTxhashToServer result:" + JSON.stringify(resp))
+        console.log("postTxhashToServer result:" + JSON.stringify(resp))
     }).catch(function (err) {
-        console.log("psotTxhashToServer error:" + JSON.stringify(err))
+        console.log("postTxhashToServer error:" + JSON.stringify(err))
     })
     //     .then(function () {
     //     window.location.href = "check.html?" + mTxHash;
@@ -250,7 +257,7 @@ function onClickModalConfirmS() {
 
             messageToBackground("txhash",resp)
 
-            psotTxhashToServer(txTobeProcessed, mTxHash);
+            postTxhashToServer(txTobeProcessed, mTxHash);
 
             //window.location.href = "check.html?" + mTxHash;
             setTimeout(() => {
