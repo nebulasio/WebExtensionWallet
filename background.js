@@ -112,6 +112,9 @@ chrome.runtime.onConnect.addListener(function(port) {
                     resetNeb();
                 }
             }
+            else if (!!msg.data.newWallet){     //user changed wallet, update the wallet right now
+                restoreAccount();
+            }
             else if (!!msg.data.getNextTx){
                 port.postMessage({
                     unapprovedTxs : unapprovedTxs

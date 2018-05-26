@@ -50,6 +50,7 @@ function onUnlockFile(swf, fileJson, account, password) {
         chrome.storage.local.set({keyInfo: valueJson}, function () {
             console.log('Value is set to ' + valueJson);
         });
+        messageToBackground("newWallet","true")
     } catch(e){
         console.log("storage set error"+e)
     }
