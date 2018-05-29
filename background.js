@@ -12,6 +12,8 @@ var neb = new nebulas.Neb();
 var gAccount;
 var network ,chainId;
 
+var sourceName = 'nebulas_WebExtensionWallet';
+
 function resetNeb() {
     //network = (localSave.getItem("network") || "").toLowerCase();
     //chainId = localSave.getItem("chainId" ) || 1001
@@ -88,12 +90,14 @@ chrome.runtime.onConnect.addListener(function(port) {
             else if (msg.data.method === "neb_call"){
                 rpc_call(msg.data.data,function (resp) {
                     port.postMessage({
+			source: sourceName,
                         neb_call: resp
                     })
                 })
             }
             else if (msg.data.method === "getAccount")
                 port.postMessage({
+		    source: sourceName,
                     account: AccAddress
                 })
         }
@@ -117,6 +121,7 @@ chrome.runtime.onConnect.addListener(function(port) {
             }
             else if (!!msg.data.getNextTx){
                 port.postMessage({
+	            source: sourceName,
                     unapprovedTxs : unapprovedTxs
                 })
             }
