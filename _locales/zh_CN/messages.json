@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "NasExtWallet",
+    "description": "星云链钱包插件"
+  },
+  "appDesc": {
+    "message": "用于星云链的交易发送和Dapp交互",
+    "description":"主要用于使用及与星云链的Dapp。实现了NebPay接口，可以用来发送交易，调用合约等。"
+  }
+}
