@@ -156,7 +156,7 @@ var uiBlock = function () {
             for(var ix = 0;ix<p.length;ix++){
                 var l = getLocation(p[ix]);
                 var nn = l.hostname + ":" + l.port;
-                apiList.push({chainId: 100+ix, name: nn, url: p[ix]});
+                apiList.push({chainId: 100, name: nn, url: p[ix]});
             }
 
 
