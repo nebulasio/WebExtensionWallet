@@ -6,6 +6,8 @@ var msgCount = 0;
 var unapprovedTxs = [];
 
 var AccAddress ;
+var AccPubKey;
+var AccPubKeyString;
 
 var nebulas = require("nebulas");
 var neb = new nebulas.Neb();
@@ -94,7 +96,9 @@ chrome.runtime.onConnect.addListener(function(port) {
             }
             else if (msg.data.method === "getAccount")
                 port.postMessage({
-                    account: AccAddress
+                    account: AccAddress,
+                    accountPubKey: AccPubKey,
+                    accountPubKeyString: AccPubKeyString
                 })
         }
         //**********************************
@@ -103,6 +107,8 @@ chrome.runtime.onConnect.addListener(function(port) {
                 return;
             if (!!msg.data.AccAddress){
                 AccAddress = msg.data.AccAddress;
+                AccPubKey = msg.data.AccPubKey;
+                AccPubKeyString = msg.data.AccPubKeyString;
             }
             else if(!!msg.data.changeNetwork){
                 if(msg.data.changeNetwork !== network){
@@ -225,6 +231,8 @@ function UnlockFile( fileJson, password) {
         address = account.getAddressString();
         gAccount = account;
         AccAddress = address;
+        AccPubKey = account.getPublicKey();
+        AccPubKeyString = account.getPublicKeyString();
 
     } catch (e) {
         // this catches e thrown by nebulas.js!account
