@@ -308,3 +308,10 @@ chrome.runtime.onMessage.addListener(
         }
 
     });
+
+
+chrome.runtime.onInstalled.addListener(function (details) {
+    if (details.reason === 'install') {
+        chrome.tabs.create({url: 'html/welcome.html'})
+    }
+})

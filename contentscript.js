@@ -14,7 +14,7 @@ var port = chrome.runtime.connect({name: "contentscript"});
 port.postMessage({src: "contentScript",dst:"background"});
 
 port.onMessage.addListener(function(msg) {
-    console.log("port.onMessage: " +JSON.stringify(msg));
+    //console.log("port.onMessage: " +JSON.stringify(msg));
 
     window.postMessage({        //forward msg from background to webpage
         "data":msg
@@ -31,10 +31,10 @@ port.onDisconnect.addListener(function(message) {
 //message from background
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
-        console.log(sender.tab ?
-            "from a content script:" + sender.tab.url :
-            "from the extension");
-        console.log("chrome.runtime.onMessage." + JSON.stringify(request));
+        // console.log(sender.tab ?
+        //     "from a content script:" + sender.tab.url :
+        //     "from the extension");
+        // console.log("chrome.runtime.onMessage." + JSON.stringify(request));
 
         if(request.logo === "nebulas"){
             request.src = "content"
@@ -53,7 +53,7 @@ window.addEventListener('message', function(e) {
     //if (e.source != window)
     //    return;
 
-    console.log("window.addEventListener: msg.data: " + JSON.stringify(e.data) );
+    //console.log("window.addEventListener: msg.data: " + JSON.stringify(e.data) );
 
     if(e.data.target === "contentscript") {
         port.postMessage({          //forward msg from webpage to background, [just for compatible]
@@ -66,7 +66,7 @@ window.addEventListener('message', function(e) {
     if(e.data.logo === "nebulas" && e.data.src === "nebPay") {  //msg from nebPay
         e.data.src = "content"
         chrome.runtime.sendMessage(e.data, function (response) {
-            console.log("response: " + JSON.stringify(response));
+            //console.log("response: " + JSON.stringify(response));
         });
     }
 
