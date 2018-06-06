@@ -1,4 +1,4 @@
-# WebExtensionWallet （Published in Chrome web store: NasExtWallet）
+# WebExtensionWallet
 
 ### Notification
 This extension is now published on [Chrome web store](https://chrome.google.com/webstore/detail/nasextwallet/gehjkhmhclgnkkhpfamakecfgakkfkco). Wellcome to install and take a try!
