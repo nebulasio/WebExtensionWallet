@@ -2,29 +2,21 @@
 'use strict';
 
 var msgCount = 0;
-//var unapprovedTxCount = 0;
 var unapprovedTxs = [];
-
 var AccAddress ;
 var AccPubKey;
 var AccPubKeyString;
-
 var nebulas = require("nebulas");
 var neb = new nebulas.Neb();
 var gAccount;
 var network ,chainId;
-
 var sourceName = 'nebulas_WebExtensionWallet';
 
 function resetNeb() {
-    //network = (localSave.getItem("network") || "").toLowerCase();
-    //chainId = localSave.getItem("chainId" ) || 1001
     network = localSave.getItem("apiPrefix") || "https://testnet.nebulas.io"
     chainId = localSave.getItem("chainId" ) || 1001
-
     neb.setRequest(new nebulas.HttpRequest(network));
 }
-
 
 function rpc_call(data, cb) {
     if (!AccAddress) {
@@ -50,7 +42,6 @@ function rpc_call(data, cb) {
             cb(resp)
         })
         .catch(function (err) {
-            console.log("rpc call error: " + JSON.stringify(err))
             cb(err.message || err)
         });
 }
@@ -75,14 +66,10 @@ function rpc_call(data, cb) {
 // }
 //receive msg from ContentScript and popup.js
 chrome.runtime.onConnect.addListener(function(port) {
-	console.log("Connected ....." + port.name );
 
 	port.onMessage.addListener(function(msg) {
-
-        msgCount ++;
-        console.log("msgCount:" + msgCount );
-        console.log("msg listened: " + JSON.stringify(msg));
-
+    msgCount ++;
+    
 		if (msg.src === 'contentScript'){       //message from webpage(DApp page)
 		    if (!msg.data)
 		        return;
@@ -139,7 +126,6 @@ chrome.runtime.onConnect.addListener(function(port) {
                 updateBadgeText();
             }
             else if (!!msg.data.txhash){
-                console.log("txhash: " + JSON.stringify(msg.data.txhash));
                 if(msg.serialNumber){
                     forwardMsgToPage(msg.serialNumber,msg.data.txhash);
                     return
@@ -152,7 +138,6 @@ chrome.runtime.onConnect.addListener(function(port) {
 
             }
             else if (!!msg.data.receipt){
-                console.log("Receipt: " + JSON.stringify(msg.data.Receipt));
                 chrome.tabs.query({}, function(tabs){       //send tx receipt back to web page
                     for (var i=0; i<tabs.length; ++i) {
                         chrome.tabs.sendMessage(tabs[i].id, {receipt: msg.data.Receipt});
@@ -161,7 +146,6 @@ chrome.runtime.onConnect.addListener(function(port) {
 
             }
             else if (!!msg.data.default) {
-                console.log("txhash: " + JSON.stringify(msg.data.default));
                 if (msg.serialNumber) {
                     forwardMsgToPage(msg.serialNumber, msg.data.default);
                 }
@@ -190,7 +174,6 @@ function forwardMsgToPage(serialNumber,resp) {
 //received a sendTransaction message
 function cacheTx(txData) {
     unapprovedTxs.push(txData)
-    console.log("unapprovedTxCount:" + unapprovedTxs.length);
     updateBadgeText()
     chrome.windows.create({'url': 'html/sendNas.html', 'type': 'popup', height: 1024, width:420}, function(window) {
     });
@@ -205,7 +188,6 @@ function updateBadgeText(){
 
 //initiallize: updateBadgeText()
 document.addEventListener("DOMContentLoaded", function() {
-    console.log("background page loaded...")
     updateBadgeText()
     resetNeb()
     restoreAccount()
@@ -213,19 +195,15 @@ document.addEventListener("DOMContentLoaded", function() {
 
 function restoreAccount() {
     chrome.storage.local.get(['keyInfo'], function(result) {
-        console.log('keyInfo Value is :' + JSON.stringify(result.keyInfo));
         result = JSON.parse(result.keyInfo)
 
         if(!!result){
-            console.log("unlockFile:")
             UnlockFile(result.fileJson, result.password)
         }
     });
 }
 
 function UnlockFile( fileJson, password) {
-    console.log("\tfileJson: " + JSON.stringify(fileJson) )
-
     try {
         var address;
         var Account = require("nebulas").Account
@@ -240,8 +218,6 @@ function UnlockFile( fileJson, password) {
 
     } catch (e) {
         // this catches e thrown by nebulas.js!account
-        console.log("unlockFile error:" + JSON.stringify(e))
-
     }
 }
 
@@ -251,12 +227,6 @@ var messagesFromPage = {};
 //listen msg from contentscript (nebpay -> contentscript -> background)
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
-        console.log(sender.tab ?
-            "from a content script:" + JSON.stringify(sender.tab) :
-            "from the extension");
-
-        console.log("request: " + JSON.stringify(request));
-
         if(request.logo === "nebulas") {
             messagesFromPage[request.params.serialNumber] = {sender: sender.tab, params: request.params};
 
@@ -272,12 +242,6 @@ chrome.runtime.onMessage.addListener(
                 }
                 rpc_call(data,function (resp) {
                     forwardMsgToPage(request.params.serialNumber,resp)
-                    // sendResponse({
-                    //     "src": "background",
-                    //     "logo": "nebulas",
-                    //     "serialNumber": request.params.serialNumber,
-                    //     "resp": resp
-                    // })
                 })
             }else if (type === "binary" ||
                 type === "deploy" ||
