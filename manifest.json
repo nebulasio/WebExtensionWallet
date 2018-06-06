@@ -3,7 +3,7 @@
     "default_locale": "en",
     "description": "The extension for Nebulas Dapp",
 
-    "version": "0.1.0",
+    "version": "0.1.1",
     "manifest_version": 2,
     
     "icons": {

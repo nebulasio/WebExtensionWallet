@@ -5,6 +5,10 @@ This extension is now published on [Chrome web store](https://chrome.google.com/
 
 We will keep improving this extension, and any suggestions are welcome! 
 
+**Note:** If you need to test local html files, you need to turn on the "Allow access to file URLs" option at extension management page:
+
+![](resources/extension_options.png)
+
 ### 1. Install
 
 (1) clone the repo into your local environment or download as a ZIP file.
