@@ -1,6 +1,6 @@
 # WebExtensionWallet
 
-### Notification
+### 1. Install
 This extension is now published on [Chrome web store](https://chrome.google.com/webstore/detail/nasextwallet/gehjkhmhclgnkkhpfamakecfgakkfkco). Wellcome to install and take a try!
 
 We will keep improving this extension, and any suggestions are welcome! 
@@ -8,18 +8,6 @@ We will keep improving this extension, and any suggestions are welcome!
 **Note:** If you need to test local html files, you need to turn on the "Allow access to file URLs" option at extension management page:
 
 ![](resources/extension_options.png)
-
-### 1. Install
-
-(1) clone the repo into your local environment or download as a ZIP file.
-
-  ![](resources/download-from-fithub.png)
-
-(2) Open your chrome browser, go to chrome://extensions/ and check the box for Developer mode in the top right.
-
-(3) Click the Load unpacked extension button and select your local repo folder for your extension.
-
-  ![](resources/add-chrome-extension.png)
 
 
 ### 2. Brief introduction of using our ExtensionWallet
