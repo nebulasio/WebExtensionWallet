@@ -20,29 +20,33 @@ $("#btn_done").on("click", function () {
     window.close()
 });
 
-if (hash) {
-    $("#input").val(hash);
-    $("#btn").trigger("click");
-}
+$(function () {
+    if (hash) {     //如果hash不为空,说明是从交易页面跳转过来的,直接出发查询过程
+        $("#input").val(hash);
+        $("#btn").trigger("click");
+    }
+    
+})
 
-var interval = 0;
+var countDown
 function setAutoCheck() {
-    if(interval === 1000)
-        return
 
     if($(".status").text() !== "success"){
-        interval = 1000
-        var second = 15
+        var interval = 1000
+        var second = 15 + 1
         var number = second
-        var countDown = setInterval(function () {
+
+        clearInterval(countDown)
+        countDown = setInterval(function () {
             if($(".status").text() === "success" ||
                 $(".status").text() === "fail"){
-                clearInterval(countDown)
                 //$("#counterDown").remove()
                 $("#btn").hide()
                 $("#btn_done").show()
             }
 
+            number--;
+            //创建或更新倒计时显示,显示number值
             if( $("#counterDown").length > 0){
                 $("#counterDown").text(' (' + number + ')')
             }else{
@@ -51,18 +55,20 @@ function setAutoCheck() {
                 spanTag.innerHTML = '(' + number + ')';
                 $("#btn").append(spanTag);
             }
-
+            //等待倒计时结束
             if(number === 0){
-                number = second
+                //number = second
                 onClickBtn()
             }
-
-            number--;
-
         }, interval)
     }
 
 }
+
+// function onClickBtn() {
+//     setAutoCheck()
+//     onClickBtnRefresh()
+// }
 
 function onClickBtn() {
     var addr = $("#input").val();

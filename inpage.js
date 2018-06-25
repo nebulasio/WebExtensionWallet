@@ -12,8 +12,7 @@ var _NasExtWallet = function () {
         getUserAddressCallback = callback
         window.postMessage({
             "target": "contentscript",
-            "data":{
-            },
+            "data":{},
             "method": "getAccount",
         }, "*");
     }
@@ -21,7 +20,7 @@ var _NasExtWallet = function () {
 // listen message from contentscript
     window.addEventListener('message', function(e) {
         // e.detail contains the transferred data (can
-        if (!!e.data.data.account) {
+        if (e.data.src ==="content" && e.data.dst === "inpage" && !!e.data.data && !!e.data.data.account) {
             userAddrerss = e.data.data.account;
             if(typeof getUserAddressCallback === 'function'){
                 getUserAddressCallback(userAddrerss)

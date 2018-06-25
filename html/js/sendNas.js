@@ -264,8 +264,8 @@ function onClickModalConfirmS() {
             setTimeout(() => {
                 window.location.href = "check.html?" + mTxHash;
             }, 1000)
-
-            return neb.api.getTransactionReceipt(mTxHash);
+            return;
+            //return neb.api.getTransactionReceipt(mTxHash);
         }).then(function (resp) {
             $("#receipt").text(mTxHash).prop("href", "check.html?" + mTxHash);
             $("#receipt_state").val(JSON.stringify(resp));

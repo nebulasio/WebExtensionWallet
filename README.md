@@ -81,7 +81,7 @@ window.addEventListener('message', function(e) {
 
 It is useful for Dapp to get the current account address in the extension. Here is the explanation on how to achive this.
 
-Method 1:
+#### Method 1:
 ```js
 var userAddrerss;
 
@@ -98,14 +98,14 @@ function getUserAddress() {
 window.addEventListener('message', function(e) {
     // e.detail contains the transferred data (can
     console.log("recived by page:" + e + ", e.data:" + JSON.stringify(e.data));
-    if (!!e.data.data.account) {
+    if (!!e.data.data && !!e.data.data.account) {
         userAddrerss = e.data.data.account;
     }
 })
 
 ```
 
-Method 2:
+#### Method 2:
 A module `NasExtWallet` is injected to your page if NasExtWallet is installed, then you can use the code below to get user account: 
 ```js
 var userAddrerss;

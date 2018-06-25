@@ -14,7 +14,7 @@ var neb = new nebulas.Neb();
 var gAccount;
 var network ,chainId;
 
-var sourceName = 'nebulas_WebExtensionWallet';
+//var sourceName = 'NasExtWallet';
 
 function resetNeb() {
     //network = (localSave.getItem("network") || "").toLowerCase();
@@ -92,13 +92,14 @@ chrome.runtime.onConnect.addListener(function(port) {
             else if (msg.data.method === "neb_call"){
                 rpc_call(msg.data.data,function (resp) {
                     port.postMessage({
-			source: sourceName,
+			            //source: sourceName,
                         neb_call: resp
                     })
                 })
             }
             else if (msg.data.method === "getAccount")
                 port.postMessage({
+                    //source: sourceName,
                     account: AccAddress,
                     accountPubKey: AccPubKey,
                     accountPubKeyString: AccPubKeyString
@@ -115,9 +116,6 @@ chrome.runtime.onConnect.addListener(function(port) {
             }
             else if(!!msg.data.changeNetwork){
                 if(msg.data.changeNetwork !== network){
-                    //localSave.setItem("network", msg.data.network);
-                    //localSave.setItem("chainId", msg.data.chainId);
-                    //location.reload(true)
                     resetNeb();
                 }
             }
@@ -126,7 +124,7 @@ chrome.runtime.onConnect.addListener(function(port) {
             }
             else if (!!msg.data.getNextTx){
                 port.postMessage({
-	            source: sourceName,
+	                //source: sourceName,
                     unapprovedTxs : unapprovedTxs
                 })
             }

@@ -17,6 +17,8 @@ port.onMessage.addListener(function(msg) {
     //console.log("port.onMessage: " +JSON.stringify(msg));
 
     window.postMessage({        //forward msg from background to webpage
+        "src": "content",
+        "dst": "inpage",
         "data":msg
     }, "*");
 
@@ -34,7 +36,6 @@ chrome.runtime.onMessage.addListener(
         // console.log(sender.tab ?
         //     "from a content script:" + sender.tab.url :
         //     "from the extension");
-        // console.log("chrome.runtime.onMessage." + JSON.stringify(request));
 
         if(request.logo === "nebulas"){
             request.src = "content"
@@ -43,6 +44,7 @@ chrome.runtime.onMessage.addListener(
         }
 
         window.postMessage({        //forward msg from background to webpage
+            "src": "content",
             "data": request
         }, "*");
 
@@ -53,8 +55,7 @@ window.addEventListener('message', function(e) {
     //if (e.source != window)
     //    return;
 
-    //console.log("window.addEventListener: msg.data: " + JSON.stringify(e.data) );
-
+    //first version,
     if(e.data.target === "contentscript") {
         port.postMessage({          //forward msg from webpage to background, [just for compatible]
             src: "contentScript",
@@ -62,7 +63,7 @@ window.addEventListener('message', function(e) {
             data: e.data
         })
     }
-
+    //add nebpay support
     if(e.data.logo === "nebulas" && e.data.src === "nebPay") {  //msg from nebPay
         e.data.src = "content"
         chrome.runtime.sendMessage(e.data, function (response) {
