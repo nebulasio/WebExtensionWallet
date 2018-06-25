@@ -109,11 +109,11 @@ Method 2:
 A module `NasExtWallet` is injected to your page if NasExtWallet is installed, then you can use the code below to get user account: 
 ```js
 var userAddrerss;
-function callback(addr){
-    userAddrerss = addr;
-}
 
-NasExtWallet.getUserAddress(callback)
+NasExtWallet.getUserAddress(function(addr){
+    userAddrerss = addr;
+    console.log("user address is : " + addr)
+})
 
 ```
 
