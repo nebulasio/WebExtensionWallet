@@ -41,8 +41,8 @@ nebPay.call(to, value, callFunction, callArgs, {
 });
 
 function cbCallDapp(resp){
-        console.log("response: " + JSON.stringify(resp))
-    }
+    console.log("response: " + JSON.stringify(resp))
+}
     
 ```
 
@@ -59,8 +59,8 @@ window.postMessage({
         "to": to,
         "value": "0",
         "contract":{  //"contract" is a parameter used to deploy a contract or call a smart contract function
-            "function":func,
-            "args":para
+            "function": func,
+            "args": para
         }
     },
     "method": "neb_sendTransaction",
@@ -72,18 +72,18 @@ And then you need to add an `eventlistener` to listen the returned message.
 window.addEventListener('message', function(e) {
      console.log("message received, msg.data: " + JSON.stringify(e.data));
      if(!!e.data.data.txhash){
-         console.log( "Transaction hash:\n" +  JSON.stringify(e.data.data.txhash,null,'\t'));
+         console.log("Transaction hash:\n" + JSON.stringify(e.data.data.txhash, null, '\t'));
      }
 })
 ```
 
 ### 4 how to get account address
 
-It is useful for Dapp to get the current account address in the extension. Here is the explanation on how to achive this.
+It is useful for Dapp to get the current account address in the extension. Here is the explanation on how to achieve this.
 
 #### Method 1:
 ```js
-var userAddrerss;
+var userAddress;
 
 function getUserAddress() {
     console.log("********* get account ************")
@@ -97,7 +97,7 @@ function getUserAddress() {
 // listen message from contentscript
 window.addEventListener('message', function(e) {
     // e.detail contains the transferred data (can
-    console.log("recived by page:" + e + ", e.data:" + JSON.stringify(e.data));
+    console.log("received by page:" + e + ", e.data:" + JSON.stringify(e.data));
     if (!!e.data.data && !!e.data.data.account) {
         userAddrerss = e.data.data.account;
     }
@@ -108,10 +108,10 @@ window.addEventListener('message', function(e) {
 #### Method 2:
 A module `NasExtWallet` is injected to your page if NasExtWallet is installed, then you can use the code below to get user account: 
 ```js
-var userAddrerss;
+var userAddress;
 
 NasExtWallet.getUserAddress(function(addr){
-    userAddrerss = addr;
+    userAddress = addr;
     console.log("user address is : " + addr)
 })
 
