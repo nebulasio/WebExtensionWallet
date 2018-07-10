@@ -230,7 +230,7 @@ function postTxhashToServer(txTobeProcessed, mTxHash,callback){
     var payId = txTobeProcessed.serialNumber;
     var txHash= mTxHash;
 
-    url = `${url}?txHash=${txHash}`;
+    url = `${url}?payId=${payId}&txHash=${txHash}`;
 
     var obj = {
         url: url,
