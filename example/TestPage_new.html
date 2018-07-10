@@ -19,9 +19,11 @@
 
     //to check if the extension is installed
     //if the extension is installed, var "webExtensionWallet" will be injected in to web page
-    if(typeof(webExtensionWallet) === "undefined"){
-        alert ("Extension wallet is not installed, please install it first.")
-    }
+    setTimeout(function () {
+        if(typeof(webExtensionWallet) === "undefined"){
+            alert ("Extension wallet is not installed, please install it first.")
+        }
+    },100)
 
     //send transaction to another address
     function onClickSendTx() {
@@ -29,7 +31,7 @@
         var amount = document.getElementById("inputAmount").value;
         nebPay.pay(to, amount, {
             qrcode: {
-                showQRCode: true
+                showQRCode: false
             },
             goods: {
                 name: "test",
@@ -40,7 +42,7 @@
         });
     }
     //callback function of onClickSendTx, to handle the transaction response
-    function cbSendTx(resp){
+    function cbSendTx(serialNumber, resp){
         console.log("callback resp: " + JSON.stringify(resp))
         document.getElementById("txResult").innerHTML = "send transaction result:\n" +  JSON.stringify(resp)
     }
@@ -63,7 +65,7 @@
         });
     }
 
-    function cbCallDapp(resp){
+    function cbCallDapp(serialNumber, resp){
         console.log("callback resp: " + JSON.stringify(resp))
         document.getElementById("callResult").innerHTML = "call Dapp result:\n" +  JSON.stringify(resp)
     }
@@ -85,7 +87,7 @@
         });
     }
 
-    function cbSimulateCall(resp){
+    function cbSimulateCall(serialNumber, resp){
         console.log("callback resp: " + JSON.stringify(resp))
         document.getElementById("simulateCallResult").innerHTML = "simulate call result:\n" +  JSON.stringify(resp)
     }

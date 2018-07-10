@@ -209,7 +209,7 @@ var request = function(obj) {
             if (xhr.status >= 200 && xhr.status < 300) {
                 resolve(xhr.response);
             } else {
-                reject(xhr.statusText);
+                reject(xhr.response);
             }
         };
         xhr.onerror = () => reject(xhr.statusText);
@@ -218,7 +218,9 @@ var request = function(obj) {
 };
 
 
-function postTxhashToServer(txTobeProcessed, mTxHash){
+var postCount = 0  //失败后的尝试次数
+var maxPostCount = 5
+function postTxhashToServer(txTobeProcessed, mTxHash,callback){
 
     if(!txTobeProcessed.callback){
         console.log("this tx has no \"callback\"")
@@ -228,7 +230,7 @@ function postTxhashToServer(txTobeProcessed, mTxHash){
     var payId = txTobeProcessed.serialNumber;
     var txHash= mTxHash;
 
-    url = `${url}?payId=${payId}&txHash=${txHash}`;
+    url = `${url}?txHash=${txHash}`;
 
     var obj = {
         url: url,
@@ -237,57 +239,31 @@ function postTxhashToServer(txTobeProcessed, mTxHash){
     };
 
     request(obj).then(function (resp) {
-        console.log("postTxhashToServer result:" + JSON.stringify(resp))
-    }).catch(function (err) {
-        console.log("postTxhashToServer error:" + JSON.stringify(err))
+        postCount = 0
+        //callback({status : 0, info:'Post serialNumber to server successfully'})
+        callback()
+    }).catch(function (error) {
+        postCount ++
+        console.log("post SN failed count: " + postCount)
+        if(postCount > maxPostCount){
+            postCount = 0
+            //callback({status: 1, info : error.message || error})  //error
+            callback(error.message || error)  //error
+        }else{
+            setTimeout(function () {
+                postTxhashToServer(txTobeProcessed, mTxHash,callback)
+            },500)
+
+        }
+
     })
-    //     .then(function () {
-    //     window.location.href = "check.html?" + mTxHash;
-    // })
 }
 
 function onClickModalConfirmS() {
     var mTxHash;
 
     gTx && neb.api.sendRawTransaction(gTx.toProtoString())
-        .then(function (resp) {
-            // console.log("sendRawTransaction resp: " + JSON.stringify(resp));
-            mTxHash = resp.txhash;
-
-            console.log("txHash got...")  //send txhash msg to background.js
-
-            messageToBackground("txhash",resp)
-
-            postTxhashToServer(txTobeProcessed, mTxHash);
-
-            //window.location.href = "check.html?" + mTxHash;
-            setTimeout(() => {
-                window.location.href = "check.html?" + mTxHash;
-            }, 1000)
-            return;
-            //return neb.api.getTransactionReceipt(mTxHash);
-        }).then(function (resp) {
-            $("#receipt").text(mTxHash).prop("href", "check.html?" + mTxHash);
-            $("#receipt_state").val(JSON.stringify(resp));
-            $("#receipt_div").show();
-
-            console.log("txReceipt got...")  //send txhash msg to background.js
-
-            messageToBackground("receipt",resp)
-
-            // TODO 重新点击需要reset页面状态，清理setTimeout
-            setTimeout(function () {
-                neb.api.getAccountState($(".icon-address.from input").val())
-                    .then(function (resp) {
-                        // console.log("getAccountState resp: " + JSON.stringify(resp));
-                        var balanceNas = Unit.fromBasic(resp.balance, "nas");
-                        $("#balance").val(balanceNas);
-                        $("#nonce").val(resp.nonce);
-                    }).catch(function (err) {
-                    // TODO error
-                });
-            }, 60 * 1000);
-        }).catch(function (o) {
+        .catch(function (o) {
             bootbox.dialog({
                 backdrop: true,
                 onEscape: true,
@@ -295,7 +271,44 @@ function onClickModalConfirmS() {
                 size: "large",
                 title: "Error"
             });
-        });
+        })
+        .then(function (resp) {
+            // console.log("sendRawTransaction resp: " + JSON.stringify(resp));
+            mTxHash = resp.txhash;
+
+            console.log("txHash got...")  //send txhash msg to background.js
+
+            //messageToBackground("txhash",resp)
+
+            postTxhashToServer(txTobeProcessed, mTxHash,function (postResult) {
+                if(postResult) {
+                    resp.error = postResult
+                }
+                messageToBackground("txhash",resp)
+                window.location.href = "check.html?" + mTxHash;
+            })
+
+        })
+        // .then(function (resp) {
+        //     console.log("postTxhashToServer result:" + JSON.stringify(resp))
+        //     messageToBackground("default","Post serialNumber to server successfully")
+        //     window.location.href = "check.html?" + mTxHash;
+        //
+        // }).catch(function (error) {
+        //     console.log("post txhash To Server error:")
+        //     console.log(JSON.stringify(error))
+        //     //failed, try again
+        //     return postTxhashToServer(txTobeProcessed, mTxHash)  //try for second time
+        // }).then(function (resp) {
+        //     messageToBackground("default","serialNumber poster to server successfully")
+        //     console.log("postTxhashToServer result:" + JSON.stringify(resp))
+        //     window.location.href = "check.html?" + mTxHash;
+        //
+        // }).catch(function (error) {
+        //     console.log("post txhash to Server error:")
+        //     console.log(JSON.stringify(error))
+        //     messageToBackground("default",{error:'Post serialNumber to server failed: ' , request_response: (error.message || error)})
+        // })
 
     // $("#receipt_div").show();
 }

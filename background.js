@@ -17,8 +17,6 @@ var network ,chainId;
 //var sourceName = 'NasExtWallet';
 
 function resetNeb() {
-    //network = (localSave.getItem("network") || "").toLowerCase();
-    //chainId = localSave.getItem("chainId" ) || 1001
     network = localSave.getItem("apiPrefix") || "https://testnet.nebulas.io"
     chainId = localSave.getItem("chainId" ) || 1001
 
@@ -138,6 +136,7 @@ chrome.runtime.onConnect.addListener(function(port) {
             }
             else if (!!msg.data.txhash){
                 console.log("txhash: " + JSON.stringify(msg.data.txhash));
+                //if has serial number, then this message is send from nebpay,
                 if(msg.serialNumber){
                     forwardMsgToPage(msg.serialNumber,msg.data.txhash);
                     return
@@ -158,7 +157,7 @@ chrome.runtime.onConnect.addListener(function(port) {
                 });
 
             }
-            else if (!!msg.data.default) {
+            else if (!!msg.data.default) { //some message about this serial-number
                 console.log("txhash: " + JSON.stringify(msg.data.default));
                 if (msg.serialNumber) {
                     forwardMsgToPage(msg.serialNumber, msg.data.default);
@@ -181,7 +180,7 @@ function forwardMsgToPage(serialNumber,resp) {
                 "resp" : resp
             });
 
-        delete messagesFromPage[serialNumber];
+        //delete messagesFromPage[serialNumber];
     }
 
 }
@@ -244,6 +243,7 @@ function UnlockFile( fileJson, password) {
 }
 
 //use Object messagesFromPage as map,
+// used to save the message from nebpay, key= serialNumber, value=
 var messagesFromPage = {};
 
 //listen msg from contentscript (nebpay -> contentscript -> background)
@@ -283,6 +283,8 @@ chrome.runtime.onMessage.addListener(
                 var txData = {
                     "to":request.params.pay.to,
                     "value":request.params.pay.value,
+                    "gasPrice":request.params.pay.gasPrice,
+                    "gasLimit":request.params.pay.gasLimit,
                     "serialNumber":request.params.serialNumber,
                     "callback":request.params.callback
                 };
@@ -309,7 +311,7 @@ chrome.runtime.onMessage.addListener(
 
 
 chrome.runtime.onInstalled.addListener(function (details) {
-    if (details.reason === 'install') {
+    if (details.reason === 'install' || details.reason === 'update') {
         chrome.tabs.create({url: 'html/welcome.html'})
     }
 })

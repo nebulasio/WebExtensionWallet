@@ -52,6 +52,9 @@ function processTx(unapprovedTxs) {
         $(".icon-address.to input").val(tx.to).trigger("input");
         $("#amount").val(tx.value).trigger("input");
 
+        if(tx.gasLimit) $("#limit").val(tx.gasLimit).trigger("input");
+        if(tx.gasPrice) $("#price").val(tx.gasPrice).trigger("input");
+
         if (length > 1)
             $("#rejectAll").show();
 
@@ -117,7 +120,7 @@ function restoreAccount() {
             $(".container select-wallet-file").addClass("active1")
             console.log("unlockFile:")
             UnlockFile(result.fileJson, result.password)
-            hideKeyFileInput()
+            if(typeof(hideKeyFileInput) === "function") hideKeyFileInput()
             getNextTx()
         }
 

@@ -31,18 +31,21 @@ $(function () {
 var countDown
 function setAutoCheck() {
 
-    if($(".status").text() !== "success"){
+    //if($(".status").text() !== "success"){
         var interval = 1000
         var second = 15 + 1
         var number = second
 
         clearInterval(countDown)
         countDown = setInterval(function () {
+
             if($(".status").text() === "success" ||
                 $(".status").text() === "fail"){
+                clearInterval(countDown)
                 //$("#counterDown").remove()
                 $("#btn").hide()
                 $("#btn_done").show()
+                return
             }
 
             number--;
@@ -61,7 +64,7 @@ function setAutoCheck() {
                 onClickBtn()
             }
         }, interval)
-    }
+    //}
 
 }
 

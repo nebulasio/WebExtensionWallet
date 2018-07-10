@@ -1,30 +1,49 @@
 <!doctype html>
-<html>
+<html style="font-size: 16px;">
 <head>
     <meta charset=utf-8>
-    <link rel="icon shortcut" href=images/logo.png>
-    <link rel=apple-touch-icon href=images/logo.png>
-    <link rel=stylesheet href=lib/bootstrap-4.0.0-dist/css/bootstrap.min.css>
-    <link rel=stylesheet href=css/base.css>
-    <link rel=stylesheet href=css/ui-block.css>
     <title>Notice</title>
     <meta name=viewport content="width=device-width">
+
     <style>
-        .active1 {
-            display: none;
+        #content {
+            padding: 20px 20px 20px 180px;
+            margin: 0;
+            font: small Verdana, Helvetica, sans-serif;
+            font-size: 80%;
+        }
+
+        .h3 {
+            font-size: 175%;
+            color: black;
+            font-family: arial;
+            margin: 22px 0px 3px 0px;
+        }
+
+        .h4{
+            font-size: 135%;
+            color: black;
+            font-family: arial;
+            margin-bottom: 0.5em;
+
+            margin: 18px 0px 0px 0px;
+        }
+
+        .p{
+            line-height: 120%;
+            text-align: left;
+            margin-top: .5em;
+            margin-bottom: 1em;
+
+            display: block;
+            -webkit-margin-before: 1em;
+            -webkit-margin-after: 1em;
+            -webkit-margin-start: 0px;
+            -webkit-margin-end: 0px;
         }
 
         .errmsg {
             color: red;
-        }
-
-        .form-control {
-            text-align: center;
-        }
-
-        .hash,
-        .information {
-            text-align: center;
         }
 
         .information {
@@ -58,26 +77,58 @@
 
         }
 
-        .check_words{
-            font-size: 12px;
-        }
     </style>
 </head>
 
 <body>
 <section class="container hash">
+    <div id="content">
     <section class=col>
+
+        <h3 class="h3">Release Notes of NasExtWallet</h3>
+        <div>
+            <h4 class="h4">0.1.4</h4>
+            <p class="p">Add feedback message for posting <tt>serialNumber</tt> to server. If <tt>serialNumber</tt> is failed to be posted to server, you should not use <tt>queryPayInfo(serialNumber)</tt> to query transaction results, please use <tt>neb.api.getTransactionReceipt</tt> instead.</p>
+
+            <p>After a transaction is send, there should be an feedback that  if the <tt>serialNumber</tt> is posted to server successfully. Hence an attribute <tt>serialNumber_status</tt> is added to the return value for <tt>listener(serialNumber, result)</tt>.  the <tt>result</tt> is:</p>
+            <pre>
+            <code class="json">
+    {
+        "txhash": "ae41d5459fc8db5ffaee5416585e0874d2324d258258b8c59cda789a04934e1a",
+        "contract_address": "",
+        "error": "{\"timestamp\":1531231627789,\"status\":400,\"error\":\"Bad Request\",\"exception\":\"org.springframework.web.bind.MissingServletRequestParameterException\",\"message\":\"Required String parameter 'payId' is not present\",\"path\":\"/api/pay\"}"
+    }
+            </code>
+            </pre>
+            <P>If the <tt>error</tt> is not empty, it means that the <tt>serialNumber</tt> is not posted to the server, then you should not use <tt>nebpay.queryPayInfo</tt>. </P>
+
+
+            <h4 class="h4">0.1.3</h4>
+            <p>Update get account address api: <tt>NasExtWallet.getUserAddress</tt>. Now you can easily get the user address. </p>
+            <pre>
+            <code type="js">
+        var userAddress;
+        NasExtWallet.getUserAddress(function(addr){
+            userAddress = addr;
+            console.log("user address is : " + addr)
+        })
+            </code>
+            </pre>
+        </div>
+
         <br>
-        <h3>How to debug with local html file</h3>
+
         <br>
-        <p>Please note that chrome extension installed from Google Web Store cannot interact with local page files by default.</p>
+        <h3 class="h3">Notice: How to debug with local html file</h3>
+        <br>
+        <p class="p">Please note that chrome extension installed from Google Web Store cannot interact with local page files by default.</p>
 
         <p>If you need to test your local page files with this extension, please check the options "Allow access to file URLs" at extension setting, just copy this link to chrome address bar: <span style="color: #0e90d2">chrome://extensions/?id=gehjkhmhclgnkkhpfamakecfgakkfkco</span></p>
         <div>
             <img src="./../resources/extension_options.png">
         </div>
     </section>
-
+    </div>
 </section>
 
 
