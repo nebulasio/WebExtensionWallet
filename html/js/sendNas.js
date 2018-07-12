@@ -224,7 +224,7 @@ function postTxhashToServer(txTobeProcessed, mTxHash,callback){
 
     if(!txTobeProcessed.callback){
         console.log("this tx has no \"callback\"")
-        return
+        callback()
     }
     var url = txTobeProcessed.callback;
     var payId = txTobeProcessed.serialNumber;

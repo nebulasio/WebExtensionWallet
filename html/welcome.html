@@ -87,10 +87,13 @@
 
         <h3 class="h3">Release Notes of NasExtWallet</h3>
         <div>
+            <h4 class="h4">0.1.5</h4>
+            <p class="p">Bug fixes: txhash page doesn't show-up after sending binary transaction with this extension.</p>
+
             <h4 class="h4">0.1.4</h4>
             <p class="p">Add feedback message for posting <tt>serialNumber</tt> to server. If <tt>serialNumber</tt> is failed to be posted to server, you should not use <tt>queryPayInfo(serialNumber)</tt> to query transaction results, please use <tt>neb.api.getTransactionReceipt</tt> instead.</p>
 
-            <p>After a transaction is send, there should be an feedback that  if the <tt>serialNumber</tt> is posted to server successfully. Hence an attribute <tt>serialNumber_status</tt> is added to the return value for <tt>listener(serialNumber, result)</tt>.  the <tt>result</tt> is:</p>
+            <p>After a transaction is send, there should be an feedback that  if the <tt>serialNumber</tt> is posted to server successfully. Hence an attribute <tt>error</tt> is added to the return value for <tt>listener(serialNumber, result)</tt>.  the <tt>result</tt> is:</p>
             <pre>
             <code class="json">
     {
