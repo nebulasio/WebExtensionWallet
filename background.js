@@ -311,7 +311,7 @@ chrome.runtime.onMessage.addListener(
 
 //details.reason === 'install' || details.reason === 'update'
 chrome.runtime.onInstalled.addListener(function (details) {
-    if (details.reason === 'install' ) {
+    if (details.reason === 'install' || details.reason === 'update') {
         chrome.tabs.create({url: 'html/welcome.html'})
     }
 })

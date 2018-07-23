@@ -20,9 +20,9 @@ We will keep improving this extension, and any suggestions are welcome!
 (6) Another way to check your transaction status is to copy your transaction hash to `check-TX` to view the result.
 ```
 
-### 3. Instructions on how to use WebExtensionApp in your webapp
+### 3. Instructions on how to use NasExtWallet in your webapp
 
-Now WebExtensionApp supports two different ways to communicate with Dapp page.
+Now NasExtWallet supports two different ways to communicate with Dapp page.
 
 
 #### 3.1 Using NebPay SDK
