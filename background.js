@@ -17,8 +17,8 @@ var network ,chainId;
 //var sourceName = 'NasExtWallet';
 
 function resetNeb() {
-    network = localSave.getItem("apiPrefix") || "https://testnet.nebulas.io"
-    chainId = localSave.getItem("chainId" ) || 1001
+    network = localSave.getItem("apiPrefix") || "https://testnet.nebulas.io";
+    chainId = localSave.getItem("chainId" ) || 1001;
 
     neb.setRequest(new nebulas.HttpRequest(network));
 }
@@ -210,12 +210,15 @@ document.addEventListener("DOMContentLoaded", function() {
 
 function restoreAccount() {
     chrome.storage.local.get(['keyInfo'], function(result) {
+        if (!result.keyInfo) {
+            return;
+        }
         console.log('keyInfo Value is :' + JSON.stringify(result.keyInfo));
-        result = JSON.parse(result.keyInfo)
+        result = JSON.parse(result.keyInfo);
 
         if(!!result){
-            console.log("unlockFile:")
-            UnlockFile(result.fileJson, result.password)
+            console.log("unlockFile:");
+            UnlockFile(result.fileJson, result.password);
         }
     });
 }

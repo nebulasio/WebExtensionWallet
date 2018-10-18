@@ -113,9 +113,13 @@ function changeNetwork() {
 function restoreAccount() {
 
     chrome.storage.local.get(['keyInfo'], function(result) {
-        console.log('keyInfo Value is :' + JSON.stringify(result.keyInfo));
-        result = JSON.parse(result.keyInfo)
-
+        try {
+            console.log('keyInfo Value is :' + JSON.stringify(result.keyInfo));
+            result = JSON.parse(result.keyInfo)
+        } catch(e) {
+            console.log(e);
+            result = null;
+        }
         if(!!result){
             $(".container select-wallet-file").addClass("active1")
             console.log("unlockFile:")

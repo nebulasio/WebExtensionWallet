@@ -123,7 +123,7 @@ function doneGetTransactionReceipt(o) {
     $(".modal.loading").modal("hide");
 
     $("#info").removeClass("active1");
-    $("#code").text(o.data);
+    $("#code").text(uiBlock.isAtpContractAddr(o.to) ? $.base64.decode(o.data) : o.data);
     $(".tx_hash").text(o.hash);
     $(".contract_addr").text(o.contract_address);
     $(".status").text(o.status == 1 ? "success" : (o.status == 0 ? "fail" : "pending"));

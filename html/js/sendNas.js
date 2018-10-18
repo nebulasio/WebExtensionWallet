@@ -27,6 +27,11 @@ uiBlock.insert({
     selectWalletFile: [".select-wallet-file", onUnlockFile]
 });
 
+function onCurrencyChanged() {
+    updateBalance()
+}
+uiBlock.addCurrencyChangedListener(onCurrencyChanged);
+
 function hideKeyFileInput(){
     $(".select-wallet-file").hide()
     $(".change_wallet").show()
@@ -65,16 +70,45 @@ function onUnlockFile(swf, fileJson, account, password) {
         $("#unlock").hide();
         $("#send").show();
 
-        neb.api.getAccountState(address)
-            .then(function (resp) {
-                var nas = Unit.fromBasic(resp.balance, "nas").toNumber();
+        updateBalance();
+    } catch (e) {
+        // this catches e thrown by nebulas.js!account
+        bootbox.dialog({
+            backdrop: true,
+            onEscape: true,
+            message: localSave.getItem("lang") == "en" ? e : "keystore 文件错误, 或者密码错误",
+            size: "large",
+            title: "Error"
+        });
+    }
+}
 
+function updateBalance() {
+    if (!gAccount) {
+        return;
+    }
+    var addr = gAccount.getAddressString();
+    var currency = uiBlock.currency;
+    var contractAddr = uiBlock.getContractAddr(uiBlock.currency);
+    $("#balance").val("").trigger("input");
+    if (currency == "NAS") {
+        neb.api.getAccountState(addr)
+            .then(function (resp) {
+                if (currency != uiBlock.currency) {
+                    return;
+                }
+                if (resp.error) {
+                    throw new Error(resp.error);
+                }
+                var nas = Unit.fromBasic(resp.balance, "nas").toNumber();
                 $("#balance").val(nas).trigger("input"); // add comma & unit from value, needs trigger 'input' event if via set o.value
                 $("#nonce").val(parseInt(resp.nonce || 0) + 1);
             })
             .catch(function (e) {
+                if (currency != uiBlock.currency) {
+                    return;
+                }
                 // this catches e thrown by nebulas.js!neb
-
                 bootbox.dialog({
                     backdrop: true,
                     onEscape: true,
@@ -83,16 +117,42 @@ function onUnlockFile(swf, fileJson, account, password) {
                     title: "Error"
                 });
             });
-    } catch (e) {
-        // this catches e thrown by nebulas.js!account
+    } else {
+        var contract = {"function": "balanceOf", "args": "[\"" + addr + "\"]"};
+        neb.api.call({"from": addr, "to": uiBlock.getContractAddr(uiBlock.currency), "gasLimit": 200000, "gasPrice":1000000, "value": 0, "contract": contract})
+            .then(function (resp) {
+                if (currency != uiBlock.currency) {
+                    return;
+                }
+                if (resp.error) {
+                    throw new Error(resp.error);
+                }
+                var b = resp.result.replace(/"/ig, "");
+                var balance = Unit.fromBasic(b, "nas").toNumber()
+                $("#balance").val(balance).trigger("input"); // add comma & unit from value, needs trigger 'input' event if via set o.value
+            })
+            .catch(function (e) {
+                if (currency != uiBlock.currency) {
+                    return;
+                }
+                // this catches e thrown by nebulas.js!neb
+                bootbox.dialog({
+                    backdrop: true,
+                    onEscape: true,
+                    message: i18n.apiErrorToText(e.message),
+                    size: "large",
+                    title: "Error"
+                });
+            });
 
-        bootbox.dialog({
-            backdrop: true,
-            onEscape: true,
-            message: localSave.getItem("lang") == "en" ? e : "keystore 文件错误, 或者密码错误",
-            size: "large",
-            title: "Error"
-        });
+        neb.api.getAccountState(addr)
+            .then(function (resp) {
+                if (!resp.error) {
+                    $("#nonce").val(parseInt(resp.nonce || 0) + 1);
+                }
+            })
+            .catch(function (e) {
+            });
     }
 }
 
@@ -117,7 +177,6 @@ function onClickGenerate() {
     messageToBackground("generate","true")
 
     var fromAddress, toAddress, balance, amount, gaslimit, gasprice, nonce, bnAmount;
-    var contract;
 
     if (validateAll()) {
         fromAddress = $(".icon-address.from input").val();
@@ -128,17 +187,13 @@ function onClickGenerate() {
         gasprice = $("#price").val();
         nonce = $("#nonce").val();
 
-        if($("#contract").val())
-            contract = JSON.parse($("#contract").val());
-
         if (gLastGenerateInfo.fromAddress != fromAddress ||
             gLastGenerateInfo.toAddress != toAddress ||
             gLastGenerateInfo.balance != balance ||
             gLastGenerateInfo.amount != amount ||
             gLastGenerateInfo.gaslimit != gaslimit ||
             gLastGenerateInfo.gasprice != gasprice ||
-            gLastGenerateInfo.nonce != nonce ||
-            gLastGenerateInfo.contract != contract) try {
+            gLastGenerateInfo.nonce != nonce) try {
             var tmp = Unit.fromBasic(Utils.toBigNumber(gaslimit)
                 .times(Utils.toBigNumber(gasprice)), "nas");
 
@@ -148,7 +203,12 @@ function onClickGenerate() {
                 else
                     bnAmount = Utils.toBigNumber(balance).minus(Utils.toBigNumber(tmp));
 
-            gTx = new Transaction(parseInt(localSave.getItem("chainId")), gAccount, toAddress, Unit.nasToBasic(Utils.toBigNumber(amount)), parseInt(nonce), gasprice, gaslimit, contract);
+            if (uiBlock.currency == "NAS") {
+                gTx = new Transaction(parseInt(localSave.getItem("chainId")), gAccount, toAddress, Unit.nasToBasic(Utils.toBigNumber(amount)), parseInt(nonce), gasprice, gaslimit);
+            } else {
+                var contract = {"source": "", "sourceType": "js", "function": "transfer", "args": "[\"" + toAddress + "\", \"" + Unit.nasToBasic(Utils.toBigNumber(amount)) + "\"]", "binary": "", "type": "call"};
+                gTx = new Transaction(parseInt(localSave.getItem("chainId")), gAccount, uiBlock.getContractAddr(uiBlock.currency), Unit.nasToBasic(Utils.toBigNumber("0")), parseInt(nonce), gasprice, gaslimit, contract);
+            }
             gTx.signTransaction();
 
             $("#raw").val(gTx.toString());

@@ -3,6 +3,10 @@
 // because this project already uses them
 
 var uiBlock = function () {
+
+    var MAIN_NET_ATP_CONTRACT_ADDR = "n1zUNqeBPvsyrw5zxp9mKcDdLTjuaEL7s39";
+    var TEST_NET_ATP_CONTRACT_ADDR = "n1rR5uiy4vDUn7TPMAtJ8Y1Eo54K6EYvSJ6";
+
     var old$fnModal = $.fn.modal;
 
     $.fn.modal = $fnModal;
@@ -11,7 +15,13 @@ var uiBlock = function () {
         insert: insert,
         numberAddComma: numberAddComma,
         toSi: toSi,
-        validate: validate
+        validate: validate,
+        currency: "NAS",
+        _currencyChangedListeners: [],
+        addCurrencyChangedListener: addCurrencyChangedListener,
+        getContractAddr: getContractAddr,
+        getCurrencyByContractAddr: getCurrencyByContractAddr,
+        isAtpContractAddr: isAtpContractAddr,
     };
 
     function $fnModal(s) {
@@ -35,6 +45,49 @@ var uiBlock = function () {
 
         if ($this.hasClass("marked-for-close"))
             $this.modal("hide");
+    }
+
+    function addCurrencyChangedListener(f) {
+        this._currencyChangedListeners.push(f);
+    }
+
+    function onCurrencyChanged() {
+        for (var i in uiBlock._currencyChangedListeners) {
+            uiBlock._currencyChangedListeners[i]();
+        }
+    }
+
+    function getContractAddr(currency) {
+        return getCurrencies()[currency];
+    }
+
+    function getCurrencyByContractAddr(addr) {
+        var currencies = getCurrencies();
+        for (var c in currencies) {
+            if (currencies[c] == addr) {
+                return c;
+            }
+        }
+        return null;
+    }
+
+    function isAtpContractAddr(addr) {
+        return addr == MAIN_NET_ATP_CONTRACT_ADDR || addr == TEST_NET_ATP_CONTRACT_ADDR;
+    }
+
+    function getCurrencies() {
+        currencies = localSave.getItem("currencies");
+        if (!currencies) {
+            currencies = { "NAS": "",  "ATP": MAIN_NET_ATP_CONTRACT_ADDR };
+        } else {
+            currencies = JSON.parse(currencies);
+        }
+        return currencies;
+    }
+
+    function getCurrencyCount() {
+        currencies = getCurrencies();
+        return Object.getOwnPropertyNames(currencies).length;
     }
 
     function insert(dic) {
@@ -142,9 +195,9 @@ var uiBlock = function () {
             // apiPrefix
 
             apiList = [
-                { chainId: 1, name: "Mainnet", url: "https://mainnet.nebulas.io" },
-                { chainId: 1001, name: "Testnet", url: "https://testnet.nebulas.io" },
-                { chainId: 100, name: "localhost:8685", url: "http://127.0.0.1:8685" }
+                { chainId: 1, name: "Mainnet", url: "https://mainnet.nebulas.io", currencies: { "NAS": "",  "ATP": MAIN_NET_ATP_CONTRACT_ADDR } },
+                { chainId: 1001, name: "Testnet", url: "https://testnet.nebulas.io", currencies: { "NAS": "",  "ATP": TEST_NET_ATP_CONTRACT_ADDR } },
+                { chainId: 100, name: "Local Nodes", url: "http://127.0.0.1:8685", currencies: { "NAS": "" } }
             ];
             apiPrefix = (localSave.getItem("apiPrefix") || "").toLowerCase();
             sApiButtons = "";
@@ -154,6 +207,7 @@ var uiBlock = function () {
             i == len && (i = 0);
             localSave.setItem("apiPrefix", apiPrefix = apiList[i].url);
             localSave.setItem("chainId", apiList[i].chainId);
+            localSave.setItem("currencies", JSON.stringify(apiList[i].currencies));
             sApiText = apiList[i].name;
 
             for (i = 0, len = apiList.length; i < len; ++i)
@@ -236,6 +290,13 @@ var uiBlock = function () {
                     attrId = $o.attr("data-id"),
                     attrValidate = $o.attr("data-validate"),
                     attrValue = $o.attr("data-value");
+                    attrCurrencySelector = $o.attr("data-currency-selector") != undefined;
+
+                var currency_items = "";
+                var currencies = getCurrencies();
+                for (var c in currencies) {
+                    currency_items += '<li><a class="dropdown-item currency ' + (uiBlock.currency == c ? 'active' : '') + '" href="#">' + c + '</a></li>';
+                }
 
                 $o.addClass("number-comma")
                     .html("<input class=form-control" +
@@ -243,15 +304,39 @@ var uiBlock = function () {
                         (attrI18n ? " data-i18n=" + attrI18n : "") +
                         (attrId ? " id=" + attrId : "") +
                         (attrValidate ? ' data-validate-order-matters="' + attrValidate + '"' : "") +
-                        (attrValue ? " value=" + attrValue : "") +
-                        "><div></div>")
+                        (attrValue ? " value=" + attrValue : "") + ">" +
+                        (attrCurrencySelector && getCurrencyCount() > 1 ?
+                            '<span class="dropdown"><a href="#" class="dropdown-toggle current-currency" data-toggle="dropdown">NAS<b class="caret"></b></a>' +
+                            '<ul class="dropdown-menu">' + currency_items + '</ul>' +
+                            '</span>' :
+                            "<div></div>")
+                    )
                     .on("input", "input", onInput)
+                    .on("click", ".currency", onCurrencyClick);
             }
 
             function onInput() {
                 var $this = $(this), $parent = $this.parent();
+                if ($parent.attr("data-currency-selector") == undefined || getCurrencyCount() == 1) {
+                    $parent.children("div").text("≈ " + toSi($this.val(), $parent.attr("data-unit")));
+                }
+            }
 
-                $parent.children("div").text("≈ " + toSi($this.val(), $parent.attr("data-unit")));
+            function onCurrencyClick() {
+                var $this = $(this), $parent = $this.parent();
+                var c = $this.text();
+                if (c == uiBlock.currency) {
+                    return;
+                }
+                uiBlock.currency = c;
+                onCurrencyChanged();
+                $(".current-currency").each(function() {
+                    $(this).text(c);
+                });
+                $(".currency").removeClass("active");
+                $this.addClass("active");
+                var inputs = $(".number-comma input");
+                inputs.trigger("input");
             }
         }
 
@@ -379,9 +464,12 @@ var uiBlock = function () {
         if (unit == "wei") {
             len = 6;
             unit = "Wei";
+        } else if (unit == "currency") {
+            len = si.length - 1;
+            unit = uiBlock.currency;
         } else {
             len = si.length - 1;
-            unit == "nas" && (unit = "NAS");
+            unit = unit.toUpperCase();
         }
 
         for (i = 0; i < len && n >= 1000; ++i, n /= 1000);
