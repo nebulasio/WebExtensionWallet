@@ -177,6 +177,7 @@ function onClickGenerate() {
     messageToBackground("generate","true")
 
     var fromAddress, toAddress, balance, amount, gaslimit, gasprice, nonce, bnAmount;
+    var contract = null;
 
     if (validateAll()) {
         fromAddress = $(".icon-address.from input").val();
@@ -186,6 +187,8 @@ function onClickGenerate() {
         gaslimit = $("#limit").val();
         gasprice = $("#price").val();
         nonce = $("#nonce").val();
+        if($("#contract").val())
+            contract = JSON.parse($("#contract").val());
 
         if (gLastGenerateInfo.fromAddress != fromAddress ||
             gLastGenerateInfo.toAddress != toAddress ||
@@ -193,6 +196,7 @@ function onClickGenerate() {
             gLastGenerateInfo.amount != amount ||
             gLastGenerateInfo.gaslimit != gaslimit ||
             gLastGenerateInfo.gasprice != gasprice ||
+            gLastGenerateInfo.contract != contract ||
             gLastGenerateInfo.nonce != nonce) try {
             var tmp = Unit.fromBasic(Utils.toBigNumber(gaslimit)
                 .times(Utils.toBigNumber(gasprice)), "nas");
@@ -203,10 +207,10 @@ function onClickGenerate() {
                 else
                     bnAmount = Utils.toBigNumber(balance).minus(Utils.toBigNumber(tmp));
 
-            if (uiBlock.currency == "NAS") {
-                gTx = new Transaction(parseInt(localSave.getItem("chainId")), gAccount, toAddress, Unit.nasToBasic(Utils.toBigNumber(amount)), parseInt(nonce), gasprice, gaslimit);
+            if (uiBlock.currency == "NAS" || contract) {
+                gTx = new Transaction(parseInt(localSave.getItem("chainId")), gAccount, toAddress, Unit.nasToBasic(Utils.toBigNumber(amount)), parseInt(nonce), gasprice, gaslimit, contract);
             } else {
-                var contract = {"source": "", "sourceType": "js", "function": "transfer", "args": "[\"" + toAddress + "\", \"" + Unit.nasToBasic(Utils.toBigNumber(amount)) + "\"]", "binary": "", "type": "call"};
+                contract = {"source": "", "sourceType": "js", "function": "transfer", "args": "[\"" + toAddress + "\", \"" + Unit.nasToBasic(Utils.toBigNumber(amount)) + "\"]", "binary": "", "type": "call"};
                 gTx = new Transaction(parseInt(localSave.getItem("chainId")), gAccount, uiBlock.getContractAddr(uiBlock.currency), Unit.nasToBasic(Utils.toBigNumber("0")), parseInt(nonce), gasprice, gaslimit, contract);
             }
             gTx.signTransaction();
