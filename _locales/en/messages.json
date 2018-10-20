@@ -5,6 +5,6 @@
   },
   "appDesc": {
     "message": "This extension is designed for Nebulas user", 
-    "description":"WebExtensionWallet is a chrome extension for dapp developers to send transactions to Nebulas BlockChain! It now implenmented the NbePay SKD."
+    "description":"WebExtensionWallet is a chrome extension for dapp developers to send transactions to Nebulas BlockChain! It now implemented the NebPay SDK."
   }
 }
