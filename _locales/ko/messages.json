@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "NasExtWallet",
+    "description": "네뷸러스 지갑 확장프로그램"
+  },
+  "appDesc": {
+    "message": "네뷸러스 사용자들을 위해 개발된 확장프로그램입니다", 
+    "description":"네뷸러스 블록체인에 트랜잭션을 전송하는 DApp 개발자들을 위한 크롬 확장 프로그램입니다! NebPay SDK로 구현되었습니다."
+  }
+}
