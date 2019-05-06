@@ -3,9 +3,9 @@
     "default_locale": "en",
     "description": "The extension for Nebulas Dapp",
 
-    "version": "0.1.8",
+    "version": "0.1.9",
     "manifest_version": 2,
-    
+
     "icons": {
         "19": "images/icon_19.png",
         "38": "images/icon_38.png",
