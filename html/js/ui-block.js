@@ -187,19 +187,32 @@ var uiBlock = function () {
         }
 
         function logoMain(selector) {
-            var i, len, apiList, langList,
+            var i, len, apiList,  langList,
                 apiPrefix, sApiButtons, sApiText,
                 lang, sLangButtons;
 
-            //
             // apiPrefix
-
             apiList = [
                 { chainId: 1, name: "Mainnet", url: "https://mainnet.nebulas.io", currencies: { "NAS": "",  "ATP": MAIN_NET_ATP_CONTRACT_ADDR } },
                 { chainId: 1001, name: "Testnet", url: "https://testnet.nebulas.io", currencies: { "NAS": "",  "ATP": TEST_NET_ATP_CONTRACT_ADDR } },
                 { chainId: 100, name: "Local Nodes", url: "http://127.0.0.1:8685", currencies: { "NAS": "" } }
             ];
+
             apiPrefix = (localSave.getItem("apiPrefix") || "").toLowerCase();
+            
+            var p = localSave.getItem("apiPrefixListAppend");
+            if(!p){
+                p = [];
+            }else{
+                p = JSON.parse(p);
+            }
+            for(var ix = 0;ix<p.length;ix++){
+                var l = getLocation(p[ix]);
+                var nn = l.hostname + ":" + l.port;
+                apiList.push({chainId: 100, name: nn, url: p[ix]});
+            }
+
+
             sApiButtons = "";
 
             for (i = 0, len = apiList.length; i < len && apiList[i].url != apiPrefix; ++i);
@@ -214,7 +227,9 @@ var uiBlock = function () {
                 sApiButtons += '<button class="' +
                     (apiPrefix == apiList[i].url ? "active " : "") + 'dropdown-item" data-i=' + i + ">" +
                     apiList[i].name + "</button>";
-
+                
+                //add custom selecter    
+                sApiButtons += '<div><input id="customrpc" placeholder="Rpc..." style="width:75px;margin:0 10px" type="custom rpc" /><button  id="add_customrpc">Add</button></div>';
             //
             // lang
 
@@ -251,7 +266,8 @@ var uiBlock = function () {
                     "        </div>" +
                     "    </div>" +
                     "</div>")
-                .on("click", ".api > button", onClickMenuApi)
+                .on("click", "#add_customrpc", onClickAddRpc)
+                .on("click", ".api > button:not(#add_customrpc)", onClickMenuApi)
                 .on("click", ".lang > button", onClickMenuLang),
                 lang);
 
@@ -263,7 +279,6 @@ var uiBlock = function () {
                     location.reload();
                 }
             }
-
             function onClickMenuLang() {
                 var $this = $(this);
 
@@ -274,8 +289,28 @@ var uiBlock = function () {
                     $this.addClass("active");
                 }
             }
+            function onClickAddRpc() {
+                var val = $("#customrpc").val();
+                if(!val) return false;
+                var l = getLocation(val);
+                localSave.setItem("apiPrefix", val);
+                var p = localSave.getItem("apiPrefixListAppend");
+                if(!p){
+                    p = [];
+                }else{
+                    p = JSON.parse(p);
+                }
+                p.push(val);
+                localSave.setItem("apiPrefixListAppend", JSON.stringify(p));
+                apiList.push({ chainId: 100, name: l.hostname + ":" + l.port , url: val });
+                location.reload();
+            }             
+        }       
+        function getLocation(href) {
+            var l = document.createElement("a");
+            l.href = href;
+            return l;
         }
-
         function numberComma(selector) {
             var $selector = $(selector);
 
