@@ -3,7 +3,7 @@
     "default_locale": "en",
     "description": "The extension for Nebulas Dapp",
 
-    "version": "0.1.9",
+    "version": "0.2.0",
     "manifest_version": 2,
 
     "icons": {
@@ -12,7 +12,7 @@
         "128": "images/icon_128.png"
     },
 
-    "permissions": ["activeTab", "declarativeContent", "storage", "tabs"],
+    "permissions": ["https://*.nebulas.io/", "activeTab", "*://*", "declarativeContent", "storage", "tabs"],
     "background": {
       "scripts": ["html/lib/nebulas.js","html/js/1-localSave.js","background.js"],
       "persistent": false
