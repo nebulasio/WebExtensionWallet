@@ -119,7 +119,7 @@ function updateBalance() {
             });
     } else {
         var contract = {"function": "balanceOf", "args": "[\"" + addr + "\"]"};
-        neb.api.call({"from": addr, "to": uiBlock.getContractAddr(uiBlock.currency), "gasLimit": 200000, "gasPrice":1000000, "value": 0, "contract": contract})
+        neb.api.call({"from": addr, "to": uiBlock.getContractAddr(uiBlock.currency), "gasLimit": 400000, "gasPrice":20000000000, "value": 0, "contract": contract})
             .then(function (resp) {
                 if (currency != uiBlock.currency) {
                     return;
@@ -128,7 +128,8 @@ function updateBalance() {
                     throw new Error(resp.error);
                 }
                 var b = resp.result.replace(/"/ig, "");
-                var balance = Unit.fromBasic(b, "nas").toString(10);
+                let decimals = uiBlock.currency == "NAX" ? "gwei" : "nas";
+                var balance = Unit.fromBasic(b, decimals).toString(10);
                 $("#balance").val(balance).trigger("input"); // add comma & unit from value, needs trigger 'input' event if via set o.value
             })
             .catch(function (e) {
@@ -213,8 +214,10 @@ function onClickGenerate() {
                 if (!amountValid) throw new Error("Invalid value! The minimum unit is wei (1^-18nas) ");
                 gTx = new Transaction(parseInt(localSave.getItem("chainId")), gAccount, toAddress, Unit.nasToBasic(Utils.toBigNumber(amount)), parseInt(nonce), gasprice, gaslimit, contract);
             } else {
-                if (!amountValid) throw new Error("Invalid value! The minimum unit is wei (1^-18" + uiBlock.currency.toLowerCase() + ") ");
-                contract = {"source": "", "sourceType": "js", "function": "transfer", "args": "[\"" + toAddress + "\", \"" + Unit.nasToBasic(Utils.toBigNumber(amount)).toString(10) + "\"]", "binary": "", "type": "call"};
+                let decimals = uiBlock.currency == "NAX" ? 9 : 18;
+                if (!amountValid) throw new Error("Invalid value! The minimum unit is wei (1^-" + decimals + uiBlock.currency.toLowerCase() + ") ");
+                let value = Utils.toBigNumber(10).pow(decimals).times(amount).toString(10)
+                contract = {"function": "transfer", "args": "[\"" + toAddress + "\", \"" + value + "\"]", "type": "call"};
                 gTx = new Transaction(parseInt(localSave.getItem("chainId")), gAccount, uiBlock.getContractAddr(uiBlock.currency), Unit.nasToBasic(Utils.toBigNumber("0")), parseInt(nonce), gasprice, gaslimit, contract);
             }
             gTx.signTransaction();

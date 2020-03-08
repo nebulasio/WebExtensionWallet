@@ -39,8 +39,8 @@ function rpc_call(data, cb) {
                 to: data.to,
                 value: data.value,
                 nonce: parseInt(accStat.nonce) + 1,
-                gasPrice: "1000000",
-                gasLimit: "200000",
+                gasPrice: "20000000000",
+                gasLimit: "400000",
                 contract: data.contract
             })
         })
