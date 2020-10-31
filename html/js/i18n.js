@@ -75,7 +75,7 @@ var i18n = function () {
             "send-nas/amount": "Amount to Send",
             "send-nas/balance": "Balance",
             "send-nas/tips/risk": "High Risk",
-            "send-nas/tips/text": "High risk, It's can transfer your assets directly",
+            "send-nas/tips/text": "High risk, It's can transfer your NRC20 assets",
             "send-nas/button/generate": "Confirm",
             "send-nas/button/reject": "Reject",
             "send-nas/button/rejectAll": "Reject All",
