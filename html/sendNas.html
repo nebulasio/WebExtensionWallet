@@ -102,9 +102,10 @@
             <input class=form-control id=nonce data-validate-order-matters="required number gt0">
         </div>
         <div id=contract_div class="form-group">
-            <label for=contract>Contract args</label>
+            <label for=contract>Contract args</label><span data-i18n=send-nas/tips/risk class="risk-tips">High Risk</span>
             <input class=form-control id=contract disabled >
         </div>
+        <div data-i18n=send-nas/tips/text class="risk-text"></div>
         <button id=generate class="btn btn-block" data-toggle=modal data-target=#modal-confirm  data-i18n=send-nas/button/generate>Confirm Transaction</button>
         <button id=reject class="btn btn-block" data-i18n=send-nas/button/reject>Reject Transaction</button>
         <button id=rejectAll class="btn btn-block active1" data-i18n=send-nas/button/rejectAll>Reject AllT</button>
