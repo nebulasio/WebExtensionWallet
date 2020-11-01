@@ -1,92 +1,91 @@
-<!doctype html>
-<html style="font-size: 16px;">
-<head>
-    <meta charset=utf-8>
+<!DOCTYPE html>
+<html style="font-size: 16px">
+  <head>
+    <meta charset="utf-8" />
     <title>Notice</title>
-    <meta name=viewport content="width=device-width">
+    <meta name="viewport" content="width=device-width" />
 
     <style>
-        #content {
-            padding: 20px 20px 20px 180px;
-            margin: 0;
-            font: small Verdana, Helvetica, sans-serif;
-            font-size: 80%;
-        }
+      #content {
+        padding: 20px 20px 20px 180px;
+        margin: 0;
+        font: small Verdana, Helvetica, sans-serif;
+        font-size: 80%;
+      }
 
-        .h3 {
-            font-size: 175%;
-            color: black;
-            font-family: arial;
-            margin: 22px 0px 3px 0px;
-        }
+      .h3 {
+        font-size: 175%;
+        color: black;
+        font-family: arial;
+        margin: 22px 0px 3px 0px;
+      }
 
-        .h4{
-            font-size: 135%;
-            color: black;
-            font-family: arial;
-            margin-bottom: 0.5em;
+      .h4 {
+        font-size: 135%;
+        color: black;
+        font-family: arial;
+        margin-bottom: 0.5em;
 
-            margin: 18px 0px 0px 0px;
-        }
+        margin: 18px 0px 0px 0px;
+      }
 
-        .p{
-            line-height: 120%;
-            text-align: left;
-            margin-top: .5em;
-            margin-bottom: 1em;
+      .p {
+        line-height: 120%;
+        text-align: left;
+        margin-top: 0.5em;
+        margin-bottom: 1em;
 
-            display: block;
-            -webkit-margin-before: 1em;
-            -webkit-margin-after: 1em;
-            -webkit-margin-start: 0px;
-            -webkit-margin-end: 0px;
-        }
+        display: block;
+        -webkit-margin-before: 1em;
+        -webkit-margin-after: 1em;
+        -webkit-margin-start: 0px;
+        -webkit-margin-end: 0px;
+      }
 
-        .errmsg {
-            color: red;
-        }
+      .errmsg {
+        color: red;
+      }
 
-        .information {
-            margin-top: 20px;
-        }
+      .information {
+        margin-top: 20px;
+      }
 
-        .mod-child td:last-child {
-            padding-bottom: 0;
-            padding-top: 0;
-            vertical-align: middle;
-        }
+      .mod-child td:last-child {
+        padding-bottom: 0;
+        padding-top: 0;
+        vertical-align: middle;
+      }
 
-        .number-comma input.form-control {
-            /* override .form-control:disabled */
-            background-color: initial;
-            border: 0;
-        }
+      .number-comma input.form-control {
+        /* override .form-control:disabled */
+        background-color: initial;
+        border: 0;
+      }
 
-        .table tr>td:first-child {
-            text-align: left;
-        }
+      .table tr > td:first-child {
+        text-align: left;
+      }
 
-        div#main-outer {
-            width: 400px;
-            margin: 5px;
-            /*background: #DDD;*/
-            border-radius: 5px;
-        }
+      div#main-outer {
+        width: 400px;
+        margin: 5px;
+        /*background: #DDD;*/
+        border-radius: 5px;
+      }
 
-        .table table-striped {
-
-        }
-
+      .table table-striped {
+      }
     </style>
-</head>
+  </head>
 
-<body>
-<section class="container hash">
-    <div id="content">
-    <section class=col>
-
-        <h3 class="h3">Release Notes of NasExtWallet</h3>
-        <div>
+  <body>
+    <section class="container hash">
+      <div id="content">
+        <section class="col">
+          <h3 class="h3">Release Notes of NasExtWallet</h3>
+          <div>
+            <h4 class="h4">0.2.2</h4>
+            <p class="p">Add NRC20 'approve' risk warning.</p>
 
             <h4 class="h4">0.2.1</h4>
             <p class="p">Modify the default gas price. Support NAX.</p>
@@ -95,21 +94,41 @@
             <p class="p">Modify the default gas price</p>
 
             <h4 class="h4">0.1.8</h4>
-            <p class="p">Fix the problem of large amount of NRC 20 transfer failure, optimize UI display of big number</p>
+            <p class="p">
+              Fix the problem of large amount of NRC 20 transfer failure,
+              optimize UI display of big number
+            </p>
 
             <h4 class="h4">0.1.7</h4>
             <p class="p">Bug fixes.</p>
 
             <h4 class="h4">0.1.6</h4>
-            <p class="p">Support ATP: the wallet would show the balance of ATP, meanwhile, it can also support ATP transaction.</p>
+            <p class="p">
+              Support ATP: the wallet would show the balance of ATP, meanwhile,
+              it can also support ATP transaction.
+            </p>
 
             <h4 class="h4">0.1.5</h4>
-            <p class="p">Bug fixes: txhash page doesn't show-up after sending binary transaction with this extension.</p>
+            <p class="p">
+              Bug fixes: txhash page doesn't show-up after sending binary
+              transaction with this extension.
+            </p>
 
             <h4 class="h4">0.1.4</h4>
-            <p class="p">Add feedback message for posting <tt>serialNumber</tt> to server. If <tt>serialNumber</tt> is failed to be posted to server, you should not use <tt>queryPayInfo(serialNumber)</tt> to query transaction results, please use <tt>neb.api.getTransactionReceipt</tt> instead.</p>
+            <p class="p">
+              Add feedback message for posting <tt>serialNumber</tt> to server.
+              If <tt>serialNumber</tt> is failed to be posted to server, you
+              should not use <tt>queryPayInfo(serialNumber)</tt> to query
+              transaction results, please use
+              <tt>neb.api.getTransactionReceipt</tt> instead.
+            </p>
 
-            <p>After a transaction is send, there should be an feedback that  if the <tt>serialNumber</tt> is posted to server successfully. Hence an attribute <tt>error</tt> is added to the return value for <tt>listener(serialNumber, result)</tt>.  the <tt>result</tt> is:</p>
+            <p>
+              After a transaction is send, there should be an feedback that if
+              the <tt>serialNumber</tt> is posted to server successfully. Hence
+              an attribute <tt>error</tt> is added to the return value for
+              <tt>listener(serialNumber, result)</tt>. the <tt>result</tt> is:
+            </p>
             <pre>
             <code class="json">
     {
@@ -119,11 +138,18 @@
     }
             </code>
             </pre>
-            <P>If the <tt>error</tt> is not empty, it means that the <tt>serialNumber</tt> is not posted to the server, then you should not use <tt>nebpay.queryPayInfo</tt>. </P>
-
+            <p>
+              If the <tt>error</tt> is not empty, it means that the
+              <tt>serialNumber</tt> is not posted to the server, then you should
+              not use <tt>nebpay.queryPayInfo</tt>.
+            </p>
 
             <h4 class="h4">0.1.3</h4>
-            <p>Update get account address api: <tt>NasExtWallet.getUserAddress</tt>. Now you can easily get the user address. </p>
+            <p>
+              Update get account address api:
+              <tt>NasExtWallet.getUserAddress</tt>. Now you can easily get the
+              user address.
+            </p>
             <pre>
             <code type="js">
         var userAddress;
@@ -133,23 +159,31 @@
         })
             </code>
             </pre>
-        </div>
+          </div>
 
-        <br>
+          <br />
 
-        <br>
-        <h3 class="h3">Notice: How to debug with local html file</h3>
-        <br>
-        <p class="p">Please note that chrome extension installed from Google Web Store cannot interact with local page files by default.</p>
+          <br />
+          <h3 class="h3">Notice: How to debug with local html file</h3>
+          <br />
+          <p class="p">
+            Please note that chrome extension installed from Google Web Store
+            cannot interact with local page files by default.
+          </p>
 
-        <p>If you need to test your local page files with this extension, please check the options "Allow access to file URLs" at extension setting, just copy this link to chrome address bar: <span style="color: #0e90d2">chrome://extensions/?id=gehjkhmhclgnkkhpfamakecfgakkfkco</span></p>
-        <div>
-            <img src="./../resources/extension_options.png">
-        </div>
+          <p>
+            If you need to test your local page files with this extension,
+            please check the options "Allow access to file URLs" at extension
+            setting, just copy this link to chrome address bar:
+            <span style="color: #0e90d2"
+              >chrome://extensions/?id=gehjkhmhclgnkkhpfamakecfgakkfkco</span
+            >
+          </p>
+          <div>
+            <img src="./../resources/extension_options.png" />
+          </div>
+        </section>
+      </div>
     </section>
-    </div>
-</section>
-
-
-</body>
+  </body>
 </html>
