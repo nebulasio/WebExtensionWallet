@@ -1,43 +1,56 @@
 {
-    "name": "NasExtWallet",
-    "default_locale": "en",
-    "description": "The extension for Nebulas Dapp",
+  "name": "NasExtWallet",
+  "default_locale": "en",
+  "description": "The extension for Nebulas Dapp",
 
-    "version": "0.2.1",
-    "manifest_version": 2,
+  "version": "0.2.1",
+  "manifest_version": 2,
 
-    "icons": {
-        "19": "images/icon_19.png",
-        "38": "images/icon_38.png",
-        "128": "images/icon_128.png"
+  "icons": {
+    "19": "images/icon_19.png",
+    "38": "images/icon_38.png",
+    "128": "images/icon_128.png"
+  },
+
+  "permissions": [
+    "https://*.nebulas.io/",
+    "activeTab",
+    "*://*/",
+    "declarativeContent",
+    "storage",
+    "tabs"
+  ],
+  "background": {
+    "scripts": [
+      "html/lib/nebulas.js",
+      "html/js/1-localSave.js",
+      "background.js"
+    ],
+    "persistent": false
+  },
+
+  "browser_action": {
+    "default_title": "Nebulas",
+    "default_icon": {
+      "19": "images/icon_19.png",
+      "38": "images/icon_38.png"
     },
 
-    "permissions": ["https://*.nebulas.io/", "activeTab", "*://*", "declarativeContent", "storage", "tabs"],
-    "background": {
-      "scripts": ["html/lib/nebulas.js","html/js/1-localSave.js","background.js"],
-      "persistent": false
-    },
+    "default_popup": "html/sendNas.html"
+  },
 
-    "browser_action": {
-        "default_title": "Nebulas",
-        "default_icon": {
-            "19": "images/icon_19.png",
-            "38": "images/icon_38.png"
-        },
-
-        "default_popup": "html/sendNas.html"
-    },
-
-   "content_scripts": [ {
+  "content_scripts": [
+    {
       "all_frames": true,
-      "js": [ "contentscript.js" ],
-      "matches": [ "file://*/*",  "http://*/*", "https://*/*" ],
+      "js": ["contentscript.js"],
+      "matches": ["file://*/*", "http://*/*", "https://*/*"],
       "run_at": "document_start"
-   } ],
+    }
+  ],
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
 
   "web_accessible_resources": ["inpage.js"],
 
-    "options_page": "html/options.html",
-    "homepage_url": "http://yourdomainhere.com/"
+  "options_page": "html/options.html",
+  "homepage_url": "http://yourdomainhere.com/"
 }
