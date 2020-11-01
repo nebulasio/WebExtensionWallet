@@ -65,7 +65,12 @@ function processTx(unapprovedTxs) {
         if (!!tx.contract) {
             //$("#contract_div").css("display", "unset");
             $("#contract_div").show();
-            $("#contract").val(JSON.stringify(tx.contract))
+            $("#contract").val(JSON.stringify(tx.contract));
+            if(tx.contract.function && tx.contract.function.toLowerCase() == 'approve'){
+                $(".risk-tips").css('display','initial');
+                $(".risk-text").show();
+                $("#generate").css('background','#ff4d4f');
+            }
         }
         else {
             //$("#contract_div").css("display", "none");
