@@ -4,11 +4,13 @@
 
 var uiBlock = (function () {
   var MAIN_NET_ATP_CONTRACT_ADDR = "n1zUNqeBPvsyrw5zxp9mKcDdLTjuaEL7s39";
-  var TEST_NET_ATP_CONTRACT_ADDR = "n1nkoSJVLQnaKnDKH56mtKtdjbgLKoHZhtD";
   var MAIN_NET_NAT_CONTRACT_ADDR = "n1mpgNi6KKdSzr7i5Ma7JsG5yPY9knf9He7";
-  var TEST_NET_NAT_CONTRACT_ADDR = "n22PdtQepev7rcQgy3zqfdAkNPN2pSpywZ8";
   var MAIN_NET_NAX_CONTRACT_ADDR = "n1etmdwczuAUCnMMvpGasfi8kwUbb2ddvRJ";
-  var TEST_NET_NAX_CONTRACT_ADDR = "n1mMUcxeDY6TWzyiTLFFUAQAb4bXUrYtvFb";
+
+  var TEST_NET_ATP_CONTRACT_ADDR = "n1nkoSJVLQnaKnDKH56mtKtdjbgLKoHZhtD";
+  var TEST_NET_NAT_CONTRACT_ADDR = "n22PdtQepev7rcQgy3zqfdAkNPN2pSpywZ8";
+  var TEST_NET_NAX_CONTRACT_ADDR = "n1ojXjG5CZKRrMLuUav46ogG81SDWe7pxD3";
+  var TEST_NET_NUSDT_CONTRACT_ADDR = "n1prbivQy5kwQ3WU9RdzRFPifJwprUrDyTQ";
 
   var old$fnModal = $.fn.modal;
 
@@ -250,6 +252,7 @@ var uiBlock = (function () {
             ATP: TEST_NET_ATP_CONTRACT_ADDR,
             NAT: TEST_NET_NAT_CONTRACT_ADDR,
             NAX: TEST_NET_NAX_CONTRACT_ADDR,
+            nUSDT: TEST_NET_NUSDT_CONTRACT_ADDR,
           },
         },
         {
