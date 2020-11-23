@@ -10,7 +10,14 @@ var uiBlock = (function () {
   var TEST_NET_ATP_CONTRACT_ADDR = "n1nkoSJVLQnaKnDKH56mtKtdjbgLKoHZhtD";
   var TEST_NET_NAT_CONTRACT_ADDR = "n22PdtQepev7rcQgy3zqfdAkNPN2pSpywZ8";
   var TEST_NET_NAX_CONTRACT_ADDR = "n1ojXjG5CZKRrMLuUav46ogG81SDWe7pxD3";
-  var TEST_NET_NUSDT_CONTRACT_ADDR = "n1prbivQy5kwQ3WU9RdzRFPifJwprUrDyTQ";
+  var TEST_NET_nUSDT_CONTRACT_ADDR = "n1prbivQy5kwQ3WU9RdzRFPifJwprUrDyTQ";
+
+  // NAS-NAX lp token
+  var TEST_NET_NAS_NAX_LP_ADDR = "n1kqDZtdvJm3JjmzqsVWedd6da5wUBwtthS";
+  // NAS-nUSDT lp token
+  var TEST_NET_NAS_nUSDT_LP_ADDR = "n1nqBaYMxn7WpJ2CXUJNV9WBAkCKeEtDLYm";
+  // NAX-nUSDT lp token
+  var TEST_NET_NAX_nUSDT_LP_ADDR = "n1gWVbt1ob79uGxLcKRNq6hgx8EBPEPD9Cd";
 
   var old$fnModal = $.fn.modal;
 
@@ -252,7 +259,10 @@ var uiBlock = (function () {
             ATP: TEST_NET_ATP_CONTRACT_ADDR,
             NAT: TEST_NET_NAT_CONTRACT_ADDR,
             NAX: TEST_NET_NAX_CONTRACT_ADDR,
-            nUSDT: TEST_NET_NUSDT_CONTRACT_ADDR,
+            nUSDT: TEST_NET_nUSDT_CONTRACT_ADDR,
+            "NAS-NAX LP": TEST_NET_NAS_NAX_LP_ADDR,
+            "NAS-nUSDT LP": TEST_NET_NAS_nUSDT_LP_ADDR,
+            "NAX-nUSDT LP": TEST_NET_NAX_nUSDT_LP_ADDR,
           },
         },
         {
