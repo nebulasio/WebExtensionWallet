@@ -6,6 +6,17 @@ var uiBlock = (function () {
   var MAIN_NET_ATP_CONTRACT_ADDR = "n1zUNqeBPvsyrw5zxp9mKcDdLTjuaEL7s39";
   var MAIN_NET_NAT_CONTRACT_ADDR = "n1mpgNi6KKdSzr7i5Ma7JsG5yPY9knf9He7";
   var MAIN_NET_NAX_CONTRACT_ADDR = "n1etmdwczuAUCnMMvpGasfi8kwUbb2ddvRJ";
+  var MAIN_NET_nUSDT_CONTRACT_ADDR = "n1tV52CtfmV4f9W6txBYDXCBE5ChC1afEa5";
+
+  // NAS-NAX lp token
+  var MAIN_NET_NAS_NAX_LP_ADDR = "n1wVRRay5H9nhd32ovdLdTTuEpub7VXKhPN";
+  // NAS-nUSDT lp token
+  var MAIN_NET_NAS_nUSDT_LP_ADDR = "n1pjr32LURxmrizcL9xbiJnWSYnoUVaRBRN";
+  // NAX-nUSDT lp token
+  var MAIN_NET_NAX_nUSDT_LP_ADDR = "n1q1TK5JgtbvxUJ9K255rV5dBktmRJUsUCs";
+
+
+
 
   var TEST_NET_ATP_CONTRACT_ADDR = "n1nkoSJVLQnaKnDKH56mtKtdjbgLKoHZhtD";
   var TEST_NET_NAT_CONTRACT_ADDR = "n22PdtQepev7rcQgy3zqfdAkNPN2pSpywZ8";
@@ -248,6 +259,11 @@ var uiBlock = (function () {
             ATP: MAIN_NET_ATP_CONTRACT_ADDR,
             NAT: MAIN_NET_NAT_CONTRACT_ADDR,
             NAX: MAIN_NET_NAX_CONTRACT_ADDR,
+            nUSDT: MAIN_NET_nUSDT_CONTRACT_ADDR,
+            "NAS-NAX LP": MAIN_NET_NAS_NAX_LP_ADDR,
+            "NAS-nUSDT LP": MAIN_NET_NAS_nUSDT_LP_ADDR,
+            "NAX-nUSDT LP": MAIN_NET_NAX_nUSDT_LP_ADDR,
+
           },
         },
         {
