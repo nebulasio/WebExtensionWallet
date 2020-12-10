@@ -66,6 +66,8 @@ function processTx(unapprovedTxs) {
             //$("#contract_div").css("display", "unset");
             $("#contract_div").show();
             $("#contract").val(JSON.stringify(tx.contract));
+            $(".icon-address.to input").attr("disabled","disabled")
+            $("#amount").attr("disabled","disabled")
             if(tx.contract.function && tx.contract.function.toLowerCase() == 'approve'){
                 $(".risk-tips").css('display','initial');
                 $(".risk-text").show();

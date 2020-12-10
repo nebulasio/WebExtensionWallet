@@ -2,7 +2,6 @@
   "name": "NasExtWallet",
   "default_locale": "en",
   "description": "The extension for Nebulas Dapp",
-
   "version": "0.2.5",
   "manifest_version": 2,
 
