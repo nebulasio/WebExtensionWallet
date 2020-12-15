@@ -146,16 +146,9 @@ var uiBlock = (function () {
         $(selector)
           .addClass("container footer")
           .html(
-            "<div class=logo></div>" +
-              "<nav class=text-center>" +
-              "    <a href=https://nebulas.io/ data-i18n=home></a>" +
-              "    <a href=https://nebulas.io/technology.html data-i18n=technology></a>" +
-              "    <a href=https://nebulas.io/community.html data-i18n=community></a>" +
-              "    <a href=https://nebulas.io/team.html data-i18n=team></a>" +
-              "    <a href=https://nebulas.io/resources.html data-i18n=resources></a>" +
-              "    <a href=https://medium.com/nebulasio data-i18n=blog target=_blank></a>" +
-              "</nav>" +
-              '<div class="copyright text-center">Copyright &copy; 2020 Nebulas.io</div>'
+            // "<div class=logo></div>" +
+            '<a href="https://nebulas.io/" target="__blank" ref="noopener noreferrer" ><img class=logo src="../images/logo-b.png"></img></a>' +
+              '<span class="copyright text-center">Copyright &copy; 2018-2020 Nebulas.io</span>'
           )
       );
     }
