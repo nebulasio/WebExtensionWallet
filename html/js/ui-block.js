@@ -9,13 +9,18 @@ var uiBlock = (function () {
   var MAIN_NET_nUSDT_CONTRACT_ADDR = "n1tV52CtfmV4f9W6txBYDXCBE5ChC1afEa5";
 
   // NAS-NAX lp token
-  var MAIN_NET_NAS_NAX_LP_ADDR = "n1wVRRay5H9nhd32ovdLdTTuEpub7VXKhPN";
+  var MAIN_NET_NAS_NAX_LP_ADDR_V1 = "n1wVRRay5H9nhd32ovdLdTTuEpub7VXKhPN";
   // NAS-nUSDT lp token
-  var MAIN_NET_NAS_nUSDT_LP_ADDR = "n1pjr32LURxmrizcL9xbiJnWSYnoUVaRBRN";
+  var MAIN_NET_NAS_nUSDT_LP_ADDR_V1 = "n1pjr32LURxmrizcL9xbiJnWSYnoUVaRBRN";
   // NAX-nUSDT lp token
-  var MAIN_NET_NAX_nUSDT_LP_ADDR = "n1q1TK5JgtbvxUJ9K255rV5dBktmRJUsUCs";
+  var MAIN_NET_NAX_nUSDT_LP_ADDR_V1 = "n1q1TK5JgtbvxUJ9K255rV5dBktmRJUsUCs";
 
-
+  // NAS-NAX lp token
+  var MAIN_NET_NAS_NAX_LP_ADDR = "n1xyK8QkGGjjmZRHufuF6JY7Vk3AcMwNUrq";
+  // NAS-nUSDT lp token
+  var MAIN_NET_NAS_nUSDT_LP_ADDR = "n1nDsKeXrwurQx1CvJasdxAWGJ7QX5xFd8g";
+  // NAX-nUSDT lp token
+  var MAIN_NET_NAX_nUSDT_LP_ADDR = "n21kYF8bYsR69utWXRDnutgDgYurpTCGSCx";
 
 
   var TEST_NET_ATP_CONTRACT_ADDR = "n1nkoSJVLQnaKnDKH56mtKtdjbgLKoHZhtD";
@@ -256,6 +261,9 @@ var uiBlock = (function () {
             "NAS-NAX LP": MAIN_NET_NAS_NAX_LP_ADDR,
             "NAS-nUSDT LP": MAIN_NET_NAS_nUSDT_LP_ADDR,
             "NAX-nUSDT LP": MAIN_NET_NAX_nUSDT_LP_ADDR,
+            "NAS-NAX LP V1": MAIN_NET_NAS_NAX_LP_ADDR_V1,
+            "NAS-nUSDT LP V1": MAIN_NET_NAS_nUSDT_LP_ADDR_V1,
+            "NAX-nUSDT LP V1": MAIN_NET_NAX_nUSDT_LP_ADDR_V1,
 
           },
         },
