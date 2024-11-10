@@ -2,7 +2,7 @@
   "name": "NasExtWallet",
   "default_locale": "en",
   "description": "The extension for Nebulas Dapp",
-  "version": "0.2.8",
+  "version": "0.2.8.2",
   "manifest_version": 2,
 
   "icons": {
@@ -15,8 +15,7 @@
     "https://*.nebulas.io/",
     "activeTab",
     "*://*/",
-    "storage",
-    "tabs"
+    "storage"
   ],
   "background": {
     "scripts": [
